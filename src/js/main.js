@@ -5,11 +5,6 @@ var el = document.getElementById("main"),
  
 two.appendTo(el);
 
-var curve = two.makeCurve(110, 100, 120, 50, 140, 150, 160, 50, 180, 150, 190, 100, true);
-curve.linewidth = 2;
-curve.scale = 1.75;
-curve.rotation = Math.PI / 2; // Quarter-turn
-curve.noFill();
 
 // to parse colors as strings
 parseColor = function (color, toNumber) {
@@ -33,7 +28,8 @@ parseColor = function (color, toNumber) {
 var flags = {
     bound: false, // set if two.bind('update', ... ) is used to avoid animation clashes
     playing: [], // once all animations stop, use this two call two.pause()
-    hasEvents: {} // to know which object has events, to remove if necessary
+    hasEvents: {}, // to know which object has events, to remove if necessary
+    links: {}
 }
 function pauseAll(ls){
     if (ls.length == 0){
@@ -41,7 +37,9 @@ function pauseAll(ls){
         console.log('all done; pausing...');
     }
 }
+
 two.bind('update', function(f){pauseAll(flags.playing)});
+//two.bind('update', function(f){redrawLinks(flags.links)});
 
 var smoothPop = function(obj,scale, speed) {
     var s = scale || 0.9999,
@@ -60,7 +58,8 @@ var smoothPop = function(obj,scale, speed) {
     obj.group.scale += t;
 };
 
-function resetEvents(obj){
+function resetEvents(obj,s){
+    console.log('check:',obj.group.id,flags.hasEvents[obj.group.id]);
     if (flags.hasEvents[obj.group.id]){
         // if an event exists under this object's name
         // get rid of the event and add new event
@@ -71,13 +70,16 @@ function resetEvents(obj){
     }
     // keep new event
     try{
-        flags.hasEvents[obj.group.id] = two._events.update.length - 1;
+        if (two._events.update.length>1){
+            flags.hasEvents[obj.group.id] = two._events.update.length;
+        }
     }catch(err){
-        flags.hasEvents[obj.group.id] = 0;
+        //flags.hasEvents[obj.group.id] = 1;
     }
     console.log('binding new event for', obj.group.id, flags.hasEvents[obj.group.id]);
     // also keep track of playing event in
     flags.playing.push(obj.group.id);
+    two.bind('update', function(f){smoothPop(obj, s);}).play();
 }
 
 /* Node class:
@@ -89,18 +91,20 @@ function node(label, x,y,r,styles){
         this.style = {opacity: 0.5,fill: col,stroke: col,linewidth: r / 50};
     }
     else {this.style = {fill: styles.fill || (Math.random() * 0xffffff)}}
-    
+    this.size = r;
     this.node =  two.makeCircle(0, 0, r);
     this.node.fill = parseColor( this.style.fill );
     this.node.noStroke();
     this.text = two.makeText(label,0,0,{
             size: r / label.length * 3,
-            stroke: parseColor(.5*(0xffffff - this.style.fill)),
+            stroke: '#555555', //parseColor(.5*(0xffffff - this.style.fill)),
             fill: '#444444' //parseColor(0xffffff - this.style.fill)
     })
     //this.text.noStroke();
     this.group = two.makeGroup(this.node, this.text);
     this.group.translation.set(x,y);
+    flags.links[label] = [];
+    
     this.view = function(){
         var self = this
         two.update();
@@ -108,20 +112,88 @@ function node(label, x,y,r,styles){
         this.docElement.onmouseenter = function(){
             console.log('mouse in');
             // first keep which event this is to be able to remove it after it's done.
-            resetEvents(self);
-            two.bind('update', function(f){smoothPop(self, 1.5);}).play();
+            resetEvents(self,1.2);
+            //two.bind('update', function(f){smoothPop(self, 1.5);}).play();
         }
         this.docElement.onmouseleave = function(){
             // self.group.scale = 1;
             // two.update();
             console.log('mouse out');
-            resetEvents(self);
-            two.bind('update', function(f){smoothPop(self, 1);}).play();
+            resetEvents(self,1);
+            //two.bind('update', function(f){smoothPop(self, 1);}).play();
+        }
+        this.docElement.onmousedown = function(){
+            console.log('click');
+            self.node.fill = '#ffff00';
+            two.update();
+            self.docElement.addEventListener('mousemove',onMouseMove, false);
+            self.docElement.onmousemove = function(){
+                
+            }
         }
         
+        this.docElement.onmouseup = function(){
+            console.log('clack');
+            self.node.fill = parseColor( self.style.fill );
+            two.update();
+            self.docElement.removeEventListener('mousemove',onMouseMove, false);
+        }
+        mouse = {
+    	    x: null,
+    	    y: null
+    	};
+        function onMouseMove (event){
+            console.log('mouse at:', event.clientX, event.clientY);
+            self.group.translation.set(event.clientX, event.clientY);
+            var l = flags.links[label];
+            for (i in l){
+                console.log(l[i]);
+                links[l[i]].update();
+            }
+            two.update();
+        }
     }
+    this.view();
+    nodes[label] = this;
 }
 two.update();
+
+function link(label1,label2, styles){
+    if (!styles){
+        var col = Math.random() * 0xffffff;
+        this.style = {opacity: 0.5,fill: col,stroke: col,linewidth: 20};
+    }
+    else {this.style = {stroke: styles.stroke || (Math.random() * 0xffffff)}}
+    this.id = label1+','+label2;
+    var p1 = nodes[label1].group.translation,
+        p2 = nodes[label2].group.translation;
+    this.link = two.makeLine(p1._x,p1._y,p2._x,p2._y);
+    this.link.stroke = parseColor(this.style.stroke);
+    this.link.linewidth = nodes[label1].size/5;
+    
+    flags.links[label1].push(this.id);
+    flags.links[label2].push(this.id);
+    var self = this;
+    this.update = function(){
+        var p1 = nodes[label1].group.translation,
+            p2 = nodes[label2].group.translation;
+        // the line position is its midpoint, the endpoints go in +- dirs
+        self.link.translation.set((p1.x+p2.x)/2,(p1.y+p2.y)/2);
+        self.link.vertices[0].set((p1.x-p2.x)/2.01,(p1.y-p2.y)/2.01);
+        self.link.vertices[1].set(-(p1.x-p2.x)/2.01,-(p1.y-p2.y)/2.01);
+        console.log('moving link center to',self.link.translation.x,self.link.translation.y );
+    };
+    this.group = two.makeGroup();
+    this.group.add(this.link);
+    this.group.add(nodes[label1].group);
+    this.group.add(nodes[label2].group);
+    //two.bind('update', function(f){self.update();});
+    two.update();
+    links[this.id] = this;
+    
+}
+
+var nodes = {}, links = {};
 
 
 // var mouse,
