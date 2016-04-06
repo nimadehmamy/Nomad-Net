@@ -1,10 +1,56 @@
 <!DOCTYPE HTML>
 <head>
-    
+    <title>NomadNet</title>
+    <link rel="stylesheet" href="src/css/12-sliding-tags/css/style.css">
+    <script src='src/js/vendor/knockout-3.4.0.js'></script>
+    <style>
+        input{
+            border:none;
+            border-radius:3px;
+            background-color: bisque;
+            
+        }
+        #projects{
+            position: fixed;
+            top: 10%;
+            left: 3%;
+            /*margin-top: 13px;
+            margin-bottom: 13px;
+            */
+            padding: 10px;
+            border-radius: 8px;
+            background-color: darkorange;
+            width: 30%;
+            color: white;
+            font-family:Tahoma;
+            /*font-weight:500;*/
+        }
+        #main{
+            border-style: solid;
+            
+        }
+        
+    </style>
 </head>
 <body>
     <div id="main"></div>
     <script src="./src/js/vendor/two.min.js"></script>
+    <script src="./src/js/visualization/scene-setup.js"></script>
+    <script src="./src/js/classes/network.js"></script>
     <script src="./src/js/main.js"></script>
+
+    <div id="projects">
+        <p>Name <input class="styled" data-bind="value: nodeLabel" /></p>
+        <h2>Hello, <span data-bind="text: fullName"> </span>!</h2>
+
+        <br>
+        <ul class="tags" id="people">
+          <li><a href="index.html">Interface <span>4</span></a></li>
+          <li><a href="index.html">Icon <span>8</span></a></li>
+          <li><a href="index.html">Typography <span>15</span></a></li>
+          <li><a href="index.html">Color <span>16</span></a></li>
+        </ul>
+    </div>
+
     
 </body>
