@@ -19,9 +19,9 @@ var network = {
         this.text = two.makeText(label,0,0,{
                 size: r / label.length * 3,
                 stroke: '#555555', //parseColor(.5*(0xffffff - this.style.fill)),
-                fill: '#444444' //parseColor(0xffffff - this.style.fill)
+                fill: 'white'//'#444444' //parseColor(0xffffff - this.style.fill)
         })
-        //this.text.noStroke();
+        this.text.noStroke();
         this.group = two.makeGroup(this.node, this.text);
         this.group.translation.set(x,y);
         flags.links[label] = [];
@@ -45,7 +45,8 @@ var network = {
             }
             this.docElement.onmousedown = function(){
                 console.log('click');
-                self.node.fill = '#ffff00';
+                //self.node.fill = '#ffff00';
+                self.node.opacity = .7;
                 two.update();
                 self.docElement.addEventListener('mousemove',onMouseMove, false);
                 self.docElement.onmousemove = function(){
@@ -56,6 +57,7 @@ var network = {
             this.docElement.onmouseup = function(){
                 console.log('clack');
                 self.node.fill = parseColor( self.style.fill );
+                self.node.opacity = 1;
                 two.update();
                 self.docElement.removeEventListener('mousemove',onMouseMove, false);
             }
@@ -64,7 +66,7 @@ var network = {
         	    y: null
         	};
             function onMouseMove (event){
-                console.log('mouse at:', event.clientX, event.clientY);
+                //console.log('mouse at:', event.clientX, event.clientY);
                 self.group.translation.set(event.clientX, event.clientY);
                 var l = flags.links[label];
                 for (i in l){
@@ -94,6 +96,11 @@ var network = {
         
         flags.links[label1].push(this.id);
         flags.links[label2].push(this.id);
+        document.getElementById('node-'+label1).innerHTML = flags.links[label1].length;
+        document.getElementById('node-'+label2).innerHTML = flags.links[label2].length;
+        network.nodes[label1].node.scale = 1+ Math.log(flags.links[label1].length);
+        network.nodes[label2].node.scale = 1+ Math.log(flags.links[label2].length);
+        
         var self = this;
         this.update = function(){
             var p1 = network.nodes[label1].group.translation,
@@ -102,7 +109,7 @@ var network = {
             self.link.translation.set((p1.x+p2.x)/2,(p1.y+p2.y)/2);
             self.link.vertices[0].set((p1.x-p2.x)/2.01,(p1.y-p2.y)/2.01);
             self.link.vertices[1].set(-(p1.x-p2.x)/2.01,-(p1.y-p2.y)/2.01);
-            console.log('moving link center to',self.link.translation.x,self.link.translation.y );
+            //console.log('moving link center to',self.link.translation.x,self.link.translation.y );
         };
         this.group = two.makeGroup();
         this.group.add(this.link);

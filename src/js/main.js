@@ -166,14 +166,43 @@ function resetEvents(obj,s){
 
 
 // Here's my data model
-var ViewModel = function(first, last) {
-    this.firstName = ko.observable(first);
-    this.lastName = ko.observable(last);
+// var ViewModel = function(first, last) {
+//     this.firstName = ko.observable(first);
+//     this.lastName = ko.observable(last);
  
+//     this.fullName = ko.pureComputed(function() {
+//         // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
+//         return this.firstName() + " " + this.lastName();
+//     }, this);
+// };
+ 
+//ko.applyBindings(new ViewModel("Planet", "Earth")); // This makes Knockout get to work
+
+var ViewModel = function(label) {
+    this.nodeLabel = ko.observable(label);
+    
     this.fullName = ko.pureComputed(function() {
         // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
-        return this.firstName() + " " + this.lastName();
+        if (this.nodeLabel()){
+            new network.node(this.nodeLabel(), 200, 300, 50, {
+                fill: 0x00aaff
+            })
+            var node = document.createElement("LI");
+            var nodeA = document.createElement("A");
+            nodeA.href = '#';
+            var textnode = document.createTextNode( this.nodeLabel());
+            nodeA.appendChild(textnode);
+            node.appendChild(nodeA);    // Append the text to <li>
+            var links = document.createElement("SPAN");
+            links.id = "node-"+this.nodeLabel();
+            links.innerHTML = 0;
+            nodeA.appendChild(links);
+            document.getElementById("people").appendChild(node);     // Append <li> to <ul>
+            
+            return null;//"hi " + this.nodeLabel();
+            
+        }
     }, this);
 };
  
-ko.applyBindings(new ViewModel("Planet", "Earth")); // This makes Knockout get to work
+ko.applyBindings(new ViewModel()); // This makes Knockout get to work

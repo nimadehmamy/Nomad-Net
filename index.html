@@ -4,10 +4,19 @@
     <link rel="stylesheet" href="src/css/12-sliding-tags/css/style.css">
     <script src='src/js/vendor/knockout-3.4.0.js'></script>
     <style>
-        input{
+        .in{
+            display: inline-block;
+            margin-left: 5%;
+            margin-right: 5%;
+            
+            width:90%;
+        }
+        .in input{
             border:none;
             border-radius:3px;
             background-color: bisque;
+            width:100%;
+            padding:5px;
             
         }
         #projects{
@@ -19,7 +28,8 @@
             */
             padding: 10px;
             border-radius: 8px;
-            background-color: darkorange;
+            background-color: rgba(255,140,0,.7);/*darkorange;*/
+            
             width: 30%;
             color: white;
             font-family:Tahoma;
@@ -37,19 +47,23 @@
     <script src="./src/js/vendor/two.min.js"></script>
     <script src="./src/js/visualization/scene-setup.js"></script>
     <script src="./src/js/classes/network.js"></script>
-    <script src="./src/js/main.js"></script>
+    
 
     <div id="projects">
-        <p>Name <input class="styled" data-bind="value: nodeLabel" /></p>
-        <h2>Hello, <span data-bind="text: fullName"> </span>!</h2>
-
+        Name<div class="in"><input class="styled" data-bind="value: nodeLabel" /></div>
+        
+        <h2><span data-bind="text: fullName"> </span></h2>
+        <!--
+        <p>First name: <input data-bind='value: firstName' /></p>
+        <p>Last name: <input data-bind='value: lastName' /></p>
+        -->
         <br>
         <ul class="tags" id="people">
-          <li><a href="index.html">Interface <span>4</span></a></li>
-          <li><a href="index.html">Icon <span>8</span></a></li>
-          <li><a href="index.html">Typography <span>15</span></a></li>
-          <li><a href="index.html">Color <span>16</span></a></li>
+          <!--<li><a href="index.html">Interface <span>4</span></a></li>
+          -->
         </ul>
+        
+        <script src="./src/js/main.js"></script>
     </div>
 
     
