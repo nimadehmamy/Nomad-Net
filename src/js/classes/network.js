@@ -41,8 +41,8 @@ var network = {
         this.handleEvents();
         
         this.info = {
-            nickName: label,
-            name: '',
+            "Nick Name": label,
+            "Name": '',
             href: '#',
             skills: 'js'
         }
@@ -65,8 +65,8 @@ var network = {
         
         flags.links[label1].push(this.id);
         flags.links[label2].push(this.id);
-        document.getElementById('node-'+label1).innerHTML = flags.links[label1].length;
-        document.getElementById('node-'+label2).innerHTML = flags.links[label2].length;
+        document.getElementById('ls:'+label1).innerHTML = flags.links[label1].length;
+        document.getElementById('ls:'+label2).innerHTML = flags.links[label2].length;
         network.nodes[label1].node.scale = 1+ Math.log(flags.links[label1].length);
         network.nodes[label2].node.scale = 1+ Math.log(flags.links[label2].length);
         
