@@ -2,31 +2,47 @@
 <head>
     <title>NomadNet</title>
     <link rel="stylesheet" href="src/css/12-sliding-tags/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
     <script src='src/js/vendor/knockout-3.4.0.js'></script>
+    <script src='src/js/eventhandling/events.js'></script>
+    
     <style>
         .in{
             display: inline-block;
-            margin-left: 5%;
-            margin-right: 5%;
-            
-            width:90%;
+            margin-left: 2%;
+            margin-right: 2%;
+            margin-top:5px;
+            width:96%;
         }
         .in input{
             border:none;
-            border-radius:3px;
+            border-top-left-radius:3px;
+            border-bottom-left-radius:3px;
             background-color: bisque;
-            width:100%;
+            width:66%;
             padding:5px;
             
         }
-        #projects{
+        .in button{
+            background-color: red;
+            border: none;
+            border-top-right-radius:3px;
+            border-bottom-right-radius:3px;
+            
+            color: white;
+            padding: 5px;
+            width:30%;
+        }
+        #toolbox{
             position: fixed;
             top: 10%;
             left: 3%;
             /*margin-top: 13px;
             margin-bottom: 13px;
+            padding-right: 10px;
             */
-            padding: 10px;
+            padding-bottom: 10px;
             border-radius: 8px;
             background-color: rgba(255,140,0,.7);/*darkorange;*/
             
@@ -40,6 +56,10 @@
             
         }
         
+        .tags li {
+          margin: 0 12px 8px 0;
+        }
+        
     </style>
 </head>
 <body>
@@ -49,19 +69,25 @@
     <script src="./src/js/classes/network.js"></script>
     
 
-    <div id="projects">
-        Name<div class="in"><input class="styled" data-bind="value: nodeLabel" /></div>
+    <div id="toolbox">
+        <form class="in" data-bind="submit: makeNode">
+            Name<br>
+            <input class="styled" id="nodeLabel" data-bind="value: nodeLabel" /><button type="submit" >Summon</button>
+            
+            <!--<span data-bind="text: fullName"> </span>
+            -->
+            <!--<p>Last name: <input data-bind='value: lastName' /></p>        -->
+            <br>
+            <ul class="tags" id="people" style="margin-top:10px;">
+            <!-- <li><a href="index.html">Interface <span>4</span></a></li>     -->
+            </ul>
+        </form>
         
-        <h2><span data-bind="text: fullName"> </span></h2>
-        <!--
-        <p>First name: <input data-bind='value: firstName' /></p>
-        <p>Last name: <input data-bind='value: lastName' /></p>
-        -->
-        <br>
-        <ul class="tags" id="people">
-          <!--<li><a href="index.html">Interface <span>4</span></a></li>
-          -->
-        </ul>
+        <form class="in" id="projects" data-bind="submit: makeLink">
+                Projects<br>
+                <input data-bind="value: linkNodes" /><button type="submit" >Link 'em</button>
+        </form>
+        
         
         <script src="./src/js/main.js"></script>
     </div>

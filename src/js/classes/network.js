@@ -7,6 +7,7 @@ var network = {
     
     /* Node class: */
     node: function(label, x,y,r,styles){
+        this.id = label;
         if (!styles){
             var col = Math.random() * 0xffffff;
             this.style = {opacity: 0.5,fill: col,stroke: col,linewidth: r / 50};
@@ -26,57 +27,8 @@ var network = {
         this.group.translation.set(x,y);
         flags.links[label] = [];
         
-        this.view = function(){
-            var self = this
-            two.update();
-            this.docElement = document.getElementById(this.group.id);
-            this.docElement.onmouseenter = function(){
-                console.log('mouse in');
-                // first keep which event this is to be able to remove it after it's done.
-                resetEvents(self,1.2);
-                //two.bind('update', function(f){smoothPop(self, 1.5);}).play();
-            }
-            this.docElement.onmouseleave = function(){
-                // self.group.scale = 1;
-                // two.update();
-                console.log('mouse out');
-                resetEvents(self,1);
-                //two.bind('update', function(f){smoothPop(self, 1);}).play();
-            }
-            this.docElement.onmousedown = function(){
-                console.log('click');
-                //self.node.fill = '#ffff00';
-                self.node.opacity = .7;
-                two.update();
-                self.docElement.addEventListener('mousemove',onMouseMove, false);
-                self.docElement.onmousemove = function(){
-                    
-                }
-            }
-            
-            this.docElement.onmouseup = function(){
-                console.log('clack');
-                self.node.fill = parseColor( self.style.fill );
-                self.node.opacity = 1;
-                two.update();
-                self.docElement.removeEventListener('mousemove',onMouseMove, false);
-            }
-            mouse = {
-        	    x: null,
-        	    y: null
-        	};
-            function onMouseMove (event){
-                //console.log('mouse at:', event.clientX, event.clientY);
-                self.group.translation.set(event.clientX, event.clientY);
-                var l = flags.links[label];
-                for (i in l){
-                    console.log(l[i]);
-                    network.links[l[i]].update();
-                }
-                two.update();
-            }
-        }
-        this.view();
+        this.handleEvents = events.nodeEvents;
+        this.handleEvents();
         network.nodes[label] = this;
     },
     

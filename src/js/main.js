@@ -51,29 +51,7 @@ var smoothPop = function(obj,scale, speed) {
     obj.group.scale += t;
 };
 
-function resetEvents(obj,s){
-    console.log('check:',obj.group.id,flags.hasEvents[obj.group.id]);
-    if (flags.hasEvents[obj.group.id]){
-        // if an event exists under this object's name
-        // get rid of the event and add new event
-        two._events.update.pop(flags.hasEvents[obj.group.id]);
-        console.log('removed event ', flags.hasEvents[obj.group.id]);
-        //flags.hasEvents[obj.group.id] = undefined;
-        flags.playing.pop();
-    }
-    // keep new event
-    try{
-        if (two._events.update.length>1){
-            flags.hasEvents[obj.group.id] = two._events.update.length;
-        }
-    }catch(err){
-        //flags.hasEvents[obj.group.id] = 1;
-    }
-    console.log('binding new event for', obj.group.id, flags.hasEvents[obj.group.id]);
-    // also keep track of playing event in
-    flags.playing.push(obj.group.id);
-    two.bind('update', function(f){smoothPop(obj, s);}).play();
-}
+
 
 
 
@@ -180,11 +158,11 @@ function resetEvents(obj,s){
 
 var ViewModel = function(label) {
     this.nodeLabel = ko.observable(label);
-    
-    this.fullName = ko.pureComputed(function() {
-        // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
-        if (this.nodeLabel()){
-            new network.node(this.nodeLabel(), 200, 300, 50, {
+    var self = this;
+    self.makeNode = function(){
+        if (self.nodeLabel()){
+            console.log(self.nodeLabel());
+            new network.node(self.nodeLabel(), 200, 300, 50, {
                 fill: 0x00aaff
             })
             var node = document.createElement("LI");
@@ -198,11 +176,59 @@ var ViewModel = function(label) {
             links.innerHTML = 0;
             nodeA.appendChild(links);
             document.getElementById("people").appendChild(node);     // Append <li> to <ul>
-            
-            return null;//"hi " + this.nodeLabel();
+            document.getElementById("nodeLabel").value = '';
+            //return null;//"hi " + this.nodeLabel();
             
         }
+    }
+    /*
+    this.fullName = ko.pureComputed(function() {//}, this);
+        // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
+    if (this.nodeLabel()){
+        console.log(this.nodeLabel());
+        new network.node(this.nodeLabel(), 200, 300, 50, {
+            fill: 0x00aaff
+        })
+        var node = document.createElement("LI");
+        var nodeA = document.createElement("A");
+        nodeA.href = '#';
+        var textnode = document.createTextNode( this.nodeLabel());
+        nodeA.appendChild(textnode);
+        node.appendChild(nodeA);    // Append the text to <li>
+        var links = document.createElement("SPAN");
+        links.id = "node-"+this.nodeLabel();
+        links.innerHTML = 0;
+        nodeA.appendChild(links);
+        document.getElementById("people").appendChild(node);     // Append <li> to <ul>
+        document.getElementById("nodeLabel").value = '';
+        //return null;//"hi " + this.nodeLabel();
+        
+    }
+    
+    this.linkNodes = ko.observable('hey');
+    var self = this;
+    this.makeLink = function(){
+        var nd = self.linkNodes();
+        if (nd.split(',').length ==2){
+            nd = nd.replace(' ','').split(',');
+            new network.link(nd[0],nd[1]);
+        }
+        console.log(nd);
+    }
     }, this);
+    */
+    this.linkNodes = ko.observable('hey');
+    var self = this;
+    this.makeLink = function(){
+        var nd = self.linkNodes();
+        if (nd.split(',').length ==2){
+            nd = nd.replace(' ','').split(',');
+            new network.link(nd[0],nd[1]);
+        }
+        console.log(nd);
+    }
 };
  
 ko.applyBindings(new ViewModel()); // This makes Knockout get to work
+
+events.dragAround('toolbox')

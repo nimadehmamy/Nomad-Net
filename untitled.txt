@@ -1,0 +1,10 @@
+# Features
+
+*  Nodes
+*  Links
+
+# Project and Hierarchy Representation
+
+We will use multi-layer structure and show the initial hierarchy using polygons at each layer. 
+
+*  Project is a triangle 
