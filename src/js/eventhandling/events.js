@@ -15,9 +15,7 @@ events = {
     dragAround: function(id) {
 
         var elem = document.getElementById(id);
-        console.log(elem);
         var loc = elem.getBoundingClientRect();
-        console.log(loc);
         elem.newLoc = {
             x: loc.left,
             y: loc.top
@@ -29,7 +27,7 @@ events = {
         elem.ondrag = function(e) {
             var curX = parseInt(elem.style.left.slice(0, -2));
             var curY = parseInt(elem.style.top.slice(0, -2));
-
+            console.log('dragging');
             if (e.clientX > 0) {
                 var left = (curX + (e.clientX - document.mouse.x)) + "px";
                 var top = (curY + (e.clientY - document.mouse.y)) + "px";
@@ -45,6 +43,7 @@ events = {
             elem.style.left = elem.newLoc.x;
             elem.style.top = elem.newLoc.y;
         };
+        
 
     },
 

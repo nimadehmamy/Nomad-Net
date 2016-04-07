@@ -194,6 +194,14 @@ var ViewModel = function(label) {
     //     }
     //     $('#info').innerHTML = s;
     // }
+    
+    this.changeInfo = function(){
+        var el = document.activeElement;
+        network.nodes[misc.infoNode].info[el.id.slice(2)] = el.value;
+        console.log('submitted ', el.value,' to ',el.id);
+        
+        
+    }
 };
  
 ko.applyBindings(new ViewModel()); // This makes Knockout get to work

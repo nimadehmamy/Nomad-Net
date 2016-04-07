@@ -66,6 +66,13 @@
             height: 2px;
             background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0));
         }
+        .infos{
+            padding: 5px;
+        }
+        .infos input{
+            border-radius:0;
+            width:92%;
+        }
     </style>
 </head>
 <body>
@@ -97,12 +104,13 @@
         <label class="in">
             <p>Info</p>
             <hr class="style-two">
-            
-            <p id="info"></p>
         </label>
-        
-        <script src="./src/js/main.js"></script>
+        <form data-bind="submit: changeInfo">
+            <table class="in infos" id="info"></table>
+        </form>
     </div>
+    <script src="./src/js/main.js"></script>
+    
 
     
 </body>

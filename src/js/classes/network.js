@@ -87,6 +87,5 @@ var network = {
         //two.bind('update', function(f){self.update();});
         two.update();
         network.links[this.id] = this;
-        
     }
 }
