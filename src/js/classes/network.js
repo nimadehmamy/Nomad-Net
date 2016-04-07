@@ -6,7 +6,10 @@ var network = {
     links: {},
     
     /* Node class: */
-    node: function(label, x,y,r,styles){
+    node: function(label, x,y,r,sides,styles){
+        network.nodes[label] = this;
+        
+        var n = sides || 0;
         this.id = label;
         if (!styles){
             var col = Math.random() * 0xffffff;
@@ -14,7 +17,11 @@ var network = {
         }
         else {this.style = {fill: styles.fill || (Math.random() * 0xffffff)}}
         this.size = r;
-        this.node =  two.makeCircle(0, 0, r);
+        if (n===0){
+            this.node =  two.makeCircle(0, 0, r);
+        }else{
+            this.node =  two.makePolygon(0, 0, r, n);
+        }
         this.node.fill = parseColor( this.style.fill );
         this.node.noStroke();
         this.text = two.makeText(label,0,0,{
@@ -22,14 +29,24 @@ var network = {
                 stroke: '#555555', //parseColor(.5*(0xffffff - this.style.fill)),
                 fill: 'white'//'#444444' //parseColor(0xffffff - this.style.fill)
         })
-        this.text.noStroke();
+        //this.text.noStroke();
+        this.text.stroke = parseColor( this.style.fill );
+        // this.text.weight = 600;
+        this.text.linewidth = .5;
         this.group = two.makeGroup(this.node, this.text);
         this.group.translation.set(x,y);
         flags.links[label] = [];
         
         this.handleEvents = events.nodeEvents;
         this.handleEvents();
-        network.nodes[label] = this;
+        
+        this.info = {
+            nickName: label,
+            name: '',
+            href: '#',
+            skills: 'js'
+        }
+        
     },
     
     /* Link class: */

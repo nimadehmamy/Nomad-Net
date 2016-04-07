@@ -6,6 +6,7 @@
 
     <script src='src/js/vendor/knockout-3.4.0.js'></script>
     <script src='src/js/eventhandling/events.js'></script>
+    <script src='src/js/misc/misc.js'></script>
     
     <style>
         .in{
@@ -22,7 +23,6 @@
             background-color: bisque;
             width:66%;
             padding:5px;
-            
         }
         .in button{
             background-color: red;
@@ -47,6 +47,8 @@
             background-color: rgba(255,140,0,.7);/*darkorange;*/
             
             width: 30%;
+            min-width: 260px;
+            max-width: 300px;
             color: white;
             font-family:Tahoma;
             /*font-weight:500;*/
@@ -57,9 +59,13 @@
         }
         
         .tags li {
-          margin: 0 12px 8px 0;
+          margin: 10px 12px 8px 0;
         }
-        
+        hr.style-two {
+            border: 0;
+            height: 2px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+        }
     </style>
 </head>
 <body>
@@ -73,21 +79,27 @@
         <form class="in" data-bind="submit: makeNode">
             Name<br>
             <input class="styled" id="nodeLabel" data-bind="value: nodeLabel" /><button type="submit" >Summon</button>
-            
-            <!--<span data-bind="text: fullName"> </span>
-            -->
-            <!--<p>Last name: <input data-bind='value: lastName' /></p>        -->
-            <br>
-            <ul class="tags" id="people" style="margin-top:10px;">
+        </form>
+        
+        <form class="in" data-bind="submit: makeLink">
+            <input data-bind="value: linkNodes" /><button type="submit" >Link 'em</button>
+            <ul class="tags blue" id="people">
             <!-- <li><a href="index.html">Interface <span>4</span></a></li>     -->
             </ul>
         </form>
         
-        <form class="in" id="projects" data-bind="submit: makeLink">
-                Projects<br>
-                <input data-bind="value: linkNodes" /><button type="submit" >Link 'em</button>
-        </form>
         
+        <form class="in" data-bind="submit: makeProject">
+                Projects<br>
+                <input data-bind="value: projectLabel" /><button type="submit" >Commence</button>
+                <ul class="tags" id="projects"></ul>
+        </form>
+        <label class="in">
+            <p>Info</p>
+            <hr class="style-two">
+            
+            <p id="info"></p>
+        </label>
         
         <script src="./src/js/main.js"></script>
     </div>

@@ -160,73 +160,40 @@ var ViewModel = function(label) {
     this.nodeLabel = ko.observable(label);
     var self = this;
     self.makeNode = function(){
-        if (self.nodeLabel()){
-            console.log(self.nodeLabel());
-            new network.node(self.nodeLabel(), 200, 300, 50, {
-                fill: 0x00aaff
-            })
-            var node = document.createElement("LI");
-            var nodeA = document.createElement("A");
-            nodeA.href = '#';
-            var textnode = document.createTextNode( this.nodeLabel());
-            nodeA.appendChild(textnode);
-            node.appendChild(nodeA);    // Append the text to <li>
-            var links = document.createElement("SPAN");
-            links.id = "node-"+this.nodeLabel();
-            links.innerHTML = 0;
-            nodeA.appendChild(links);
-            document.getElementById("people").appendChild(node);     // Append <li> to <ul>
-            document.getElementById("nodeLabel").value = '';
-            //return null;//"hi " + this.nodeLabel();
-            
-        }
-    }
-    /*
-    this.fullName = ko.pureComputed(function() {//}, this);
-        // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
-    if (this.nodeLabel()){
-        console.log(this.nodeLabel());
-        new network.node(this.nodeLabel(), 200, 300, 50, {
-            fill: 0x00aaff
-        })
-        var node = document.createElement("LI");
-        var nodeA = document.createElement("A");
-        nodeA.href = '#';
-        var textnode = document.createTextNode( this.nodeLabel());
-        nodeA.appendChild(textnode);
-        node.appendChild(nodeA);    // Append the text to <li>
-        var links = document.createElement("SPAN");
-        links.id = "node-"+this.nodeLabel();
-        links.innerHTML = 0;
-        nodeA.appendChild(links);
-        document.getElementById("people").appendChild(node);     // Append <li> to <ul>
-        document.getElementById("nodeLabel").value = '';
-        //return null;//"hi " + this.nodeLabel();
-        
+        var ls = misc.splitClean(self.nodeLabel());
+        ls.forEach(function(a){
+            misc.makeNode("people", a, 200, 300, 50, 0, {fill: 0x00aaff});
+        });
     }
     
-    this.linkNodes = ko.observable('hey');
-    var self = this;
-    this.makeLink = function(){
-        var nd = self.linkNodes();
-        if (nd.split(',').length ==2){
-            nd = nd.replace(' ','').split(',');
+    this.linkNodes = ko.observable('Alice, Bob');
+    self.makeLink = function(){
+        var nd = misc.splitClean(self.linkNodes());
+        if (nd.length ==2){
             new network.link(nd[0],nd[1]);
         }
         console.log(nd);
     }
-    }, this);
-    */
-    this.linkNodes = ko.observable('hey');
-    var self = this;
-    this.makeLink = function(){
-        var nd = self.linkNodes();
-        if (nd.split(',').length ==2){
-            nd = nd.replace(' ','').split(',');
-            new network.link(nd[0],nd[1]);
-        }
-        console.log(nd);
+    this.projectLabel = ko.observable('Nomad Net');
+    self.makeProject = function(){
+        var ls = misc.splitClean(self.projectLabel());
+        ls.forEach(function(a){
+            misc.makeNode("projects", a, 500, 100, 100, 3, {fill: 0xff5533});
+        });
     }
+    
+    // self.showInfo = function(){
+    //     var node = {info:{
+    //          hi: 'there',
+    //          how: 'are you'
+    //      }
+    //      };
+    //     str = "";
+    //     for (i in node.info){
+    //         s += i+": "+node.info[i] +"<br>";
+    //     }
+    //     $('#info').innerHTML = s;
+    // }
 };
  
 ko.applyBindings(new ViewModel()); // This makes Knockout get to work

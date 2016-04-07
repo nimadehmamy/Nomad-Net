@@ -2,7 +2,10 @@ document.mouse = {
     x: 0,
     y: 0
 };
-
+document.touch = {
+    x: 0,
+    y: 0
+};
 events = {
     getMouse: function(e) {
         document.mouse.x = e.clientX;
@@ -14,7 +17,7 @@ events = {
         var elem = document.getElementById(id);
         console.log(elem);
         var loc = elem.getBoundingClientRect();
-        console.log(loc)
+        console.log(loc);
         elem.newLoc = {
             x: loc.left,
             y: loc.top
@@ -33,20 +36,20 @@ events = {
                 elem.newLoc = {
                     x: left,
                     y: top
-                }
+                };
             }
 
-        }
+        };
 
         elem.ondragend = function() {
             elem.style.left = elem.newLoc.x;
             elem.style.top = elem.newLoc.y;
-        }
+        };
 
     },
 
     nodeEvents: function() {
-        var self = this
+        var self = this;
         two.update();
         this.docElement = document.getElementById(this.group.id);
         this.docElement.onmouseenter = function() {
@@ -54,37 +57,52 @@ events = {
             // first keep which event this is to be able to remove it after it's done.
             events.resetEvents(self, 1.2);
             //two.bind('update', function(f){smoothPop(self, 1.5);}).play();
-        }
+        };
         this.docElement.onmouseleave = function() {
             // self.group.scale = 1;
             // two.update();
             console.log('mouse out');
             events.resetEvents(self, 1);
             //two.bind('update', function(f){smoothPop(self, 1);}).play();
-        }
-        this.docElement.onmousedown = function() {
-            console.log('click');
-            //self.node.fill = '#ffff00';
-            self.node.opacity = .7;
+        };
+        // this.docElement.onmousedown =
+        this.docElement.addEventListener('mousedown', onMouseDown, false);
+        this.docElement.addEventListener('touchstart', onTouchStart, false);
+        this.docElement.addEventListener('touchend', function(e){
+            console.log('clack');
+            self.node.fill = parseColor(self.style.fill);
+            self.node.opacity = 1;
             two.update();
-            self.docElement.addEventListener('mousemove', onMouseMove, false);
-            self.docElement.onmousemove = function() {
-
-            }
-        }
-
-        this.docElement.onmouseup = function() {
+            self.docElement.removeEventListener('touchmove', onTouchMove, false);
+        }, false);
+        
+        self.docElement.onmouseup = function() {
             console.log('clack');
             self.node.fill = parseColor(self.style.fill);
             self.node.opacity = 1;
             two.update();
             self.docElement.removeEventListener('mousemove', onMouseMove, false);
-        }
-        mouse = {
-            x: null,
-            y: null
         };
-
+        
+        function onTouchStart(event){
+            events.getMouse(event.touches[0]);
+            self.docElement.addEventListener('touchmove', onTouchMove, false);
+        }
+        
+        function onTouchMove( event ) {
+			event.preventDefault();
+			event.clientX = event.touches[0].clientX;
+			event.clientY = event.touches[0].clientY;
+			onMouseMove( event );
+		}
+        function onMouseDown(event) {
+            console.log('click');
+            //self.node.fill = '#ffff00';
+            self.node.opacity = 0.7;
+            two.update();
+            self.docElement.addEventListener('mousemove', onMouseMove, false);
+            
+        }
         function onMouseMove(event) {
             //console.log('mouse at:', event.clientX, event.clientY);
             var x = self.group.translation.x + event.clientX - document.mouse.x ;
