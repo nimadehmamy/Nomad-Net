@@ -17,7 +17,25 @@ var misc ={
         }
         return ls.split(',');
     },
+    // to parse colors as strings
+    parseColor : function (color, toNumber) {
+      if (toNumber === true) {
+        if (typeof color === 'number') {
+          return (color | 0); //chop off decimal
+        }
+        if (typeof color === 'string' && color[0] === '#') {
+          color = color.slice(1);
+        }
+        return window.parseInt(color, 16);
+      } else {
+        if (typeof color === 'number') {
+          //make sure our hexadecimal number is padded out
+          color = '#' + ('00000' + (color | 0).toString(16)).substr(-6);
+        }
     
+        return color;
+      }
+    },
     makeNode: function(where,label, x,y,r,sides,style){
         
         console.log(label);

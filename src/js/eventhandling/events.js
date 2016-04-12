@@ -54,14 +54,14 @@ events = {
         this.docElement.onmouseenter = function() {
             console.log('mouse in');
             // first keep which event this is to be able to remove it after it's done.
-            events.resetEvents(self, 1.2);
+            events.resetEvents(self, 1.2*self.group.scale0);
             //two.bind('update', function(f){smoothPop(self, 1.5);}).play();
         };
         this.docElement.onmouseleave = function() {
             // self.group.scale = 1;
             // two.update();
             console.log('mouse out');
-            events.resetEvents(self, 1);
+            events.resetEvents(self, 1/1.2*self.group.scale0);
             //two.bind('update', function(f){smoothPop(self, 1);}).play();
         };
         // this.docElement.onmousedown =
@@ -69,7 +69,7 @@ events = {
         this.docElement.addEventListener('touchstart', onTouchStart, false);
         this.docElement.addEventListener('touchend', function(e){
             console.log('clack');
-            self.node.fill = parseColor(self.style.fill);
+            //self.node.fill = misc.parseColor(self.style.fill);
             self.node.opacity = 1;
             two.update();
             self.docElement.removeEventListener('touchmove', onTouchMove, false);
@@ -77,7 +77,7 @@ events = {
         
         self.docElement.onmouseup = function() {
             console.log('clack');
-            self.node.fill = parseColor(self.style.fill);
+            //self.node.fill = misc.parseColor(self.style.fill);
             self.node.opacity = 1;
             two.update();
             self.docElement.removeEventListener('mousemove', onMouseMove, false);

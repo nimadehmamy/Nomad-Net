@@ -22,19 +22,21 @@ var network = {
         }else{
             this.node =  two.makePolygon(0, 0, r, n);
         }
-        this.node.fill = parseColor( this.style.fill );
+        this.node.fill = misc.parseColor( this.style.fill );
         this.node.noStroke();
         this.text = two.makeText(label,0,0,{
-                size: r / label.length * 3,
-                stroke: '#555555', //parseColor(.5*(0xffffff - this.style.fill)),
-                fill: 'white'//'#444444' //parseColor(0xffffff - this.style.fill)
+                size: Math.max(r / label.length * 3, 10),
+                stroke: '#555555', //misc.parseColor(.5*(0xffffff - this.style.fill)),
+                fill: 'white'//'#444444' //misc.parseColor(0xffffff - this.style.fill)
         })
         //this.text.noStroke();
-        this.text.stroke = parseColor( this.style.fill );
-        // this.text.weight = 600;
-        this.text.linewidth = .5;
+        this.text.stroke = misc.parseColor( this.style.fill );
+        this.text.weight = (this.text.size > 20) ? 500: 500 + 2*500*10/this.text.size;
+        this.text.linewidth = this.text.size /100;
+        console.log(this.text.weight,this.text.linewidth);
         this.group = two.makeGroup(this.node, this.text);
         this.group.translation.set(x,y);
+        this.group.scale0 = this.group.scale;
         flags.links[label] = [];
         
         this.handleEvents = events.nodeEvents;
@@ -46,6 +48,7 @@ var network = {
             href: '#',
             skills: 'js'
         }
+        
         
     },
     
@@ -60,15 +63,17 @@ var network = {
         var p1 = network.nodes[label1].group.translation,
             p2 = network.nodes[label2].group.translation;
         this.link = two.makeLine(p1._x,p1._y,p2._x,p2._y);
-        this.link.stroke = parseColor(this.style.stroke);
+        this.link.stroke = misc.parseColor(this.style.stroke);
         this.link.linewidth = network.nodes[label1].size/5;
         
         flags.links[label1].push(this.id);
         flags.links[label2].push(this.id);
         document.getElementById('ls:'+label1).innerHTML = flags.links[label1].length;
         document.getElementById('ls:'+label2).innerHTML = flags.links[label2].length;
-        network.nodes[label1].node.scale = 1+ Math.log(flags.links[label1].length);
-        network.nodes[label2].node.scale = 1+ Math.log(flags.links[label2].length);
+        network.nodes[label1].group.scale = 1+ Math.log(flags.links[label1].length);
+        network.nodes[label2].group.scale = 1+ Math.log(flags.links[label2].length);
+        network.nodes[label1].group.scale0 = 1+ Math.log(flags.links[label1].length);
+        network.nodes[label2].group.scale0 = 1+ Math.log(flags.links[label2].length);
         
         var self = this;
         this.update = function(){
