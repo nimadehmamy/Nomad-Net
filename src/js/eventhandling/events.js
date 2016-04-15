@@ -51,6 +51,10 @@ events = {
         var self = this;
         two.update();
         this.docElement = document.getElementById(this.group.id);
+        this.docElement.onclick = function(){
+            console.log('clicked ', self.id);
+            misc.showInfo(self.id);
+        };
         this.docElement.onmouseenter = function() {
             console.log('mouse in');
             // first keep which event this is to be able to remove it after it's done.

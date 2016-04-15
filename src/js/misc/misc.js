@@ -43,7 +43,7 @@ var misc ={
         var node = document.createElement("LI");
         var nodeA = document.createElement("A");
         //nodeA.href = '#';
-        node.setAttribute("onclick", "misc.showInfo($(this)[0].childNodes[0])");//("data-bind", "click: showInfo");
+        node.setAttribute("onclick", "misc.showInfo($(this)[0].childNodes[0].id.slice(2))");//("data-bind", "click: showInfo");
         var textnode = document.createTextNode( label);
         nodeA.appendChild(textnode);
         nodeA.id = "n:"+label;
@@ -58,17 +58,22 @@ var misc ={
     },
     
     showInfo: function(el){
-        var node = network.nodes[el.id.slice(2)];
-        misc.infoNode = el.id.slice(2); //save node label;
+        console.log('info: ', el);
+        var node = network.nodes[el];//.id.slice(2)];
+        misc.infoNode = el;//.id.slice(2); //save node label;
         
         $('#info')[0].innerHTML = ''
         var s = '';//'<div style="width:90%; display:table">';
         console.log('here');
         for (i in node.info){ // style="background-color:green"
-            s += '<tr><td>'+i+':</td><td><input id="i:'+i+
-            '" value="'+node.info[i]+ //data-bind="value: infoValue"
-            '"/><button type="submit" style="width:0;padding:0;"></button></td></tr>';
-//            s += i+": "+node.info[i] +"<br>";
+            if (node.info[i].form){
+                s += s += '<tr><td>'+i+':</td><td><button type="submit" style="background-color:blue;">'+'Open'+'</button></td></tr>';
+            }
+            else{
+                s += '<tr><td>' + i + ':</td><td><input id="i:' + i +
+                '" value="' + node.info[i] + //data-bind="value: infoValue"
+                '"/><button type="submit" style="width:0;padding:0;"></button></td></tr>';
+            }
         }
         $('#info')[0].innerHTML = s;
         //console.log(s);

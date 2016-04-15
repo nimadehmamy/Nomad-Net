@@ -45,11 +45,37 @@ var network = {
         this.info = {
             "Nick Name": label,
             "Name": '',
-            href: '#',
-            skills: 'js'
+            href: '#'
         }
         
+        this.doc =`
+        Set the node.info based on the type of node (i.e. people, projects, etc.).
+        If an info field is an object, include a 'type' field to specify
+        whether it is a check box, text field or another object:
+        example:
+        this.info['Milestones'] = {
+            type: 'checkbox',
+            'Node events': 1,
+            'project graph': 0
+        }
         
+        this.info['Notes'] = {
+            type: 'text',
+            note:
+            'These things still need to be done'
+        }
+        
+        this.info['Skills'] = {
+            type:'tags',
+            tags: {
+                javascript: 5,
+                python: 7,
+                physics: 9,
+                biology: 3
+            }
+        }
+        
+        ` // end of multiline notes
     },
     
     /* Link class: */

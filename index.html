@@ -34,6 +34,16 @@
             padding: 5px;
             width:30%;
         }
+        .note textarea{
+            border:none;
+            border-radius:3px;
+            background-color: bisque;
+            width:96%;
+            height:96%;
+            padding:5px;
+            box-sizing:border-box;
+            -moz-box-sizing:border-box;
+        }
         #toolbox{
             position: fixed;
             top: 10%;
@@ -74,6 +84,45 @@
             border-radius:0;
             width:92%;
         }
+        
+        #notes{
+            position: fixed;
+            top: 10%;
+            right: 3%;
+            /*margin-top: 13px;
+            margin-bottom: 13px;
+            padding-right: 10px;
+            */
+            padding-bottom: 3px;
+            border-radius: 8px;
+            background-color: rgba(210,40,10,.8);/*darkorange;*/
+            
+            width: 20%;
+            
+            min-width: 50px;
+            color: white;
+            font-family:Tahoma;
+            /*font-weight:500;*/
+        }
+        .note {
+            position: relative;
+            height:200px;
+        }
+        .fill{
+             position:absolute; padding:1em 2em;
+            left:0; top:0; width:100%; height:100%;
+            background:#efe;
+            border:0; margin:0;
+        }
+        
+        textarea {
+            position:absolute;
+            left:2%; top:2%;
+            /*border:0; margin:0;*/
+            box-sizing:border-box;
+            -moz-box-sizing:border-box
+        }
+        
     </style>
 </head>
 <body>
@@ -82,7 +131,16 @@
     <script src="./src/js/visualization/scene-setup.js"></script>
     <script src="./src/js/classes/network.js"></script>
     
-
+    <div id="notes" data-bind="submit: makeNote">
+        <form class="in" >
+            Notes:
+            <div class="note">
+                <textarea class="styled" id="note-text" data-bind="value: noteText"></textarea>
+            </div>
+            <button type="submit" style="background-color:green;">Note</button>
+            <script>events.dragAround('notes'); </script>
+        </form>
+    </div>
     <div id="toolbox">
         <form class="in" data-bind="submit: makeNode">
             Name<br>

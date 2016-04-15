@@ -40,8 +40,11 @@ var ViewModel = function(label) {
     var self = this;
     self.makeNode = function(){
         var ls = misc.splitClean(self.nodeLabel());
-        ls.forEach(function(a){
-            misc.makeNode("people", a, 500, 300, def.r, 0, {fill: 0x00aaff});
+        ls.forEach(function(name){
+            misc.makeNode("people", name, 500, 300, def.r, 0, {fill: 0x00aaff});
+            network.nodes[name].info['Testing'] = {
+                form: 'hi'
+            };
         });
     }
     
@@ -80,7 +83,11 @@ var ViewModel = function(label) {
         console.log('submitted ', el.value,' to ',el.id);
         
         
-    }
+    };
+    this.noteText = ko.observable('write your notes here.');
+    self.makeNote = function(){
+        //
+    };
 };
  
 ko.applyBindings(new ViewModel()); // This makes Knockout get to work
