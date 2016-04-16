@@ -49,13 +49,7 @@ var ViewModel = function(label) {
     }
     
     this.linkNodes = ko.observable('Alice, Bob');
-    self.makeLink = function(){
-        var nd = misc.splitClean(self.linkNodes());
-        if (nd.length ==2){
-            new network.link(nd[0],nd[1]);
-        }
-        console.log(nd);
-    }
+    self.makeLink = network.makeLinks(this.linkNodes());
     this.projectLabel = ko.observable('Nomad Net');
     self.makeProject = function(){
         var ls = misc.splitClean(self.projectLabel());

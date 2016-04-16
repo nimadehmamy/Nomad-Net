@@ -108,8 +108,8 @@ events = {
         }
         function onMouseMove(event) {
             //console.log('mouse at:', event.clientX, event.clientY);
-            var x = self.group.translation.x + event.clientX - document.mouse.x ;
-            var y = self.group.translation.y + event.clientY - document.mouse.y ;
+            var x = self.group.translation.x + (event.clientX - document.mouse.x)/two.scene.scale ;
+            var y = self.group.translation.y + (event.clientY - document.mouse.y)/two.scene.scale ;
             document.mouse = {
                 x: event.clientX,
                 y: event.clientY
@@ -147,7 +147,18 @@ events = {
         // also keep track of playing event in
         flags.playing.push(obj.group.id);
         two.bind('update', function(f){smoothPop(obj, s);}).play();
+    },
+    
+    wheel: function(e){
+        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        console.log(delta,e.clientX,e.wheelDelta );
+        var ds = 0.01*delta;
+        two.scene.scale *= 1+ ds;
+        two.scene.translation.add(two.scene.translation, new Two.Vector(-ds * e.clientX, -ds * e.clientY));
+        two.update();
+        
     }
 };
 
 document.addEventListener('mousedown', events.getMouse,false);
+document.addEventListener('mousewheel', events.wheel, false );

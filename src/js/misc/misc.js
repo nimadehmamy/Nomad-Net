@@ -6,8 +6,9 @@ var misc ={
         ;});
     },
     
-    splitClean: function(l){
-        var ls = l.replace(/[\s]*,[\s]*/ig,',') // removes spaces around commas.
+    splitClean: function(l,ch){
+        var sep = ch || ',';
+        var ls = (sep ==';') ? l.replace(/[\s]*;[\s]*/ig,';') : l.replace(/[\s]*,[\s]*/ig,',') // removes spaces around sep.
         ls = ls.replace(/[\s]+/ig,' ') // replaces multiple spaces with a single space.
         if (ls[0]== ' '){
             ls = ls.slice(1,ls.length);
@@ -15,7 +16,8 @@ var misc ={
         if (ls[ls.length-1]== ' '){
             ls = ls.slice(0,ls.length-1);
         }
-        return ls.split(',');
+        
+        return (sep ==';') ? ls.split(';') : ls.split(',');
     },
     // to parse colors as strings
     parseColor : function (color, toNumber) {
@@ -65,7 +67,7 @@ var misc ={
         $('#info')[0].innerHTML = ''
         var s = '';//'<div style="width:90%; display:table">';
         console.log('here');
-        for (i in node.info){ // style="background-color:green"
+        for (var i in node.info){ // style="background-color:green"
             if (node.info[i].form){
                 s += s += '<tr><td>'+i+':</td><td><button type="submit" style="background-color:blue;">'+'Open'+'</button></td></tr>';
             }
@@ -77,6 +79,14 @@ var misc ={
         }
         $('#info')[0].innerHTML = s;
         //console.log(s);
+    },
+    
+    sum: function(ls){
+        var s = 0;
+        for (var i in ls) {
+            s += ls[i];
+        }
+        return s;
     },
     
     infoNode: ''
