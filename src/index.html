@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<head>
+    <title>NomadNet</title>
+    <link rel="stylesheet" href="css/12-sliding-tags/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://cdn.peerjs.com/0.3/peer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    
+    <script src='js/eventhandling/events.js'></script>
+    <script src='js/misc/misc.js'></script>
+    <script src="https://www.webrtc-experiment.com/streamer.js"> </script>
+    
+    <style>
+        .in{
+            display: inline-block;
+            margin-top:2px;
+            margin-bottom:2px;
+            width:100%;
+        }
+        .in input{
+            border:none;
+            border-top-left-radius:3px;
+            border-bottom-left-radius:3px;
+            background-color: bisque;
+            width:66%;
+            padding:5px;
+        }
+        .in button{
+            background-color: red;
+            border: none;
+            border-top-right-radius:3px;
+            border-bottom-right-radius:3px;
+            
+            color: white;
+            padding: 5px;
+            width:30%;
+        }
+        .note textarea{
+            border:none;
+            border-radius:3px;
+            background-color: bisque;
+            width:96%;
+            height:96%;
+            padding:5px;
+            box-sizing:border-box;
+            -moz-box-sizing:border-box;
+        }
+        .float{
+            position: fixed;
+            top: 10%;
+            left: 3%;
+            padding: .4%;
+            border-radius: 8px;
+            background-color: rgba(210,40,10,.8);/*brickred;*/
+            
+            width: 20%;
+            color: white;
+            font-family:Tahoma;
+            /*font-weight:500;*/
+        }
+        .float video{
+            border-radius: 4px;
+        }
+        .in.green{
+            background-color:green;
+        }
+        #main{
+            border-style: solid;
+            
+        }
+        
+        .tags li {
+          margin: 4px 12px 0px 0;
+        }
+        hr.style-two {
+            border: 0;
+            height: 1px;
+            margin: 0;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0));
+        }
+        .infos{
+            padding: 5px;
+        }
+        .infos input{
+            border-radius:0;
+            width:92%;
+        }
+        
+        #notes{
+            position: fixed;
+            top: 10%;
+            left:77%;
+            background-color: rgba(210,40,10,.8);/*brickred;*/
+            width: 20%;
+            min-width: 50px;
+        }
+        #toolbox{
+            padding-bottom: 10px;
+            background-color: rgba(255,140,0,.8);/*darkorange;*/
+            width:30%;
+            min-width: 260px;
+            max-width: 300px;
+        }
+        .note {
+            position: relative;
+            height:200px;
+        }
+        
+        
+        textarea {
+            position:absolute;
+            left:2%; top:2%;
+            /*border:0; margin:0;*/
+            box-sizing:border-box;
+            -moz-box-sizing:border-box
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+    <script src="js/vendor/two.min.js"></script>
+    <script src="js/visualization/scene-setup.js"></script>
+    <script src="js/classes/network.js"></script>
+    
+    <div id="notes" class="float" data-bind="submit: makeNote">
+        <form class="in" >
+            Notes:
+            <div class="note">
+                <textarea id="note-text" data-bind="value: noteText"></textarea>
+            </div>
+            <button type="submit" style="background-color:green;">Note</button>
+            <script>events.dragAround('notes'); </script>
+        </form>
+    </div>
+    
+    <div id="toolbox" class="float">
+        <form class="in" data-bind="submit: makeNode">
+            Name<br>
+            <input id="nodeLabel" data-bind="value: nodeLabel" /><button type="submit" >Summon</button>
+        </form>
+        
+        <form class="in" data-bind="submit: makeLink">
+            <input data-bind="value: linkNodes" /><button type="submit" >Link 'em</button>
+            <ul class="tags blue" id="people">
+            <!-- <li><a href="index.html">Interface <span>4</span></a></li>     -->
+            </ul>
+        </form>
+        
+        
+        <form class="in" data-bind="submit: makeProject">
+                Projects<br>
+                <input data-bind="value: projectLabel" /><button type="submit" >Commence</button>
+                <ul class="tags" id="projects"></ul>
+        </form>
+        <label class="in">
+            <p>Info</p>
+            <hr class="style-two">
+        </label>
+        <form data-bind="submit: changeInfo">
+            <table class="in infos" id="info"></table>
+        </form>
+    </div>
+    
+    <div id="stream" class="float" style="left:77%;top:50%;">
+        <form class="in" data-bind="submit: setupUser">
+            User<br>
+            <input id="userId" data-bind="value: userId" style="width:60%" />
+            <button class="green" type="submit" style="background-color:green;">Be</button>
+        </form>
+        <form class="in" data-bind="submit: peerConnect">
+            Peer<br>
+            <input id="peerId" data-bind="value: peerId" style="width:60%" />
+            <button class="green" type="submit" style="background-color:green;">Call</button>
+        </form>
+        <!--<video id="myvid" width="100%" src="test.webm" controls></video>
+        -->
+        <form class="in" data-bind="submit: videoStream">
+            Send Video<br>
+            <input type="file" title="WebM<800KB" style="width:96%" />
+            
+        </form>
+        Received Video<br>
+        <video id="yovid" width="100%" controls></video>
+        <form class="in" data-bind="submit: p2preset">
+            <button class="green" type="submit" style="background-color:green;">Drop</button>
+        </form>
+        
+        <script>events.dragAround('stream'); </script>
+    </div>
+    
+    <script src="js/p2p/main.js"></script>
+    
+    
+    
+</body>
