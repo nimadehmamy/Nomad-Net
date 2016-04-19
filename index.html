@@ -2,149 +2,48 @@
 <head>
     <title>NomadNet</title>
     <link rel="stylesheet" href="src/css/12-sliding-tags/css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-
+    <link rel="stylesheet" href="src/css/my.css">
+    
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    -->
+    <script src='src/js/vendor/jquery-1.12.3.min.js'></script>
     <script src='src/js/vendor/knockout-3.4.0.js'></script>
     <script src='src/js/eventhandling/events.js'></script>
     <script src='src/js/misc/misc.js'></script>
-    
+    <script src='src/js/vendor/streamer.js'> </script>
     <style>
-        .in{
-            display: inline-block;
-            margin-left: 2%;
-            margin-right: 2%;
-            margin-top:5px;
-            width:96%;
+        .notes textarea {
+            animation-name: collapse;
+            animation-duration: 1s;
         }
-        .in input{
-            border:none;
-            border-top-left-radius:3px;
-            border-bottom-left-radius:3px;
-            background-color: bisque;
-            width:66%;
-            padding:5px;
+        @keyframes collapse {
+            from {height: 1%;}
+            to {height: 96%;}
         }
-        .in button{
-            background-color: red;
-            border: none;
-            border-top-right-radius:3px;
-            border-bottom-right-radius:3px;
-            
-            color: white;
-            padding: 5px;
-            width:30%;
-        }
-        .note textarea{
-            border:none;
-            border-radius:3px;
-            background-color: bisque;
-            width:96%;
-            height:96%;
-            padding:5px;
-            box-sizing:border-box;
-            -moz-box-sizing:border-box;
-        }
-        #toolbox{
-            position: fixed;
-            top: 10%;
-            left: 3%;
-            /*margin-top: 13px;
-            margin-bottom: 13px;
-            padding-right: 10px;
-            */
-            padding-bottom: 10px;
-            border-radius: 8px;
-            background-color: rgba(255,140,0,.8);/*darkorange;*/
-            
-            width: 30%;
-            min-width: 260px;
-            max-width: 300px;
-            color: white;
-            font-family:Tahoma;
-            /*font-weight:500;*/
-        }
-        #main{
-            border-style: solid;
-            
-        }
-        
-        .tags li {
-          margin: 4px 12px 0px 0;
-        }
-        hr.style-two {
-            border: 0;
-            height: 1px;
-            margin: 0;
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0));
-        }
-        .infos{
-            padding: 5px;
-        }
-        .infos input{
-            border-radius:0;
-            width:92%;
-        }
-        
-        #notes{
-            position: fixed;
-            top: 10%;
-            right: 3%;
-            /*margin-top: 13px;
-            margin-bottom: 13px;
-            padding-right: 10px;
-            */
-            padding-bottom: 3px;
-            border-radius: 8px;
-            background-color: rgba(210,40,10,.8);/*darkorange;*/
-            
-            width: 20%;
-            
-            min-width: 50px;
-            color: white;
-            font-family:Tahoma;
-            /*font-weight:500;*/
-        }
-        .note {
-            position: relative;
-            height:200px;
-        }
-        .fill{
-             position:absolute; padding:1em 2em;
-            left:0; top:0; width:100%; height:100%;
-            background:#efe;
-            border:0; margin:0;
-        }
-        
-        textarea {
-            position:absolute;
-            left:2%; top:2%;
-            /*border:0; margin:0;*/
-            box-sizing:border-box;
-            -moz-box-sizing:border-box
-        }
-        
     </style>
+    
 </head>
 <body>
     <div id="main"></div>
-    <script src="./src/js/vendor/two.min.js"></script>
-    <script src="./src/js/visualization/scene-setup.js"></script>
-    <script src="./src/js/classes/network.js"></script>
+    <script src="src/js/vendor/two.min.js"></script>
+    <script src="src/js/visualization/scene-setup.js"></script>
+    <script src="src/js/classes/network.js"></script>
     
-    <div id="notes" data-bind="submit: makeNote">
+    <div id="notes" class="float" data-bind="submit: makeNote">
         <form class="in" >
             Notes:
             <div class="note">
-                <textarea class="styled" id="note-text" data-bind="value: noteText"></textarea>
+                <textarea id="note-text" data-bind="value: noteText"></textarea>
             </div>
             <button type="submit" style="background-color:green;">Note</button>
             <script>events.dragAround('notes'); </script>
         </form>
     </div>
-    <div id="toolbox">
+    
+    <div id="toolbox" class="float">
         <form class="in" data-bind="submit: makeNode">
             Name<br>
-            <input class="styled" id="nodeLabel" data-bind="value: nodeLabel" /><button type="submit" >Summon</button>
+            <input id="nodeLabel" data-bind="value: nodeLabel" /><button type="submit" >Summon</button>
         </form>
         
         <form class="in" data-bind="submit: makeLink">
@@ -167,8 +66,41 @@
         <form data-bind="submit: changeInfo">
             <table class="in infos" id="info"></table>
         </form>
+        
+        <form class="in" data-bind="submit: fizzix">
+            <button class="green" type="submit" style="background-color:green;">fizzix</button>
+        </form>
     </div>
-    <script src="./src/js/main.js"></script>
+    
+    <div id="stream" class="float" style="left:77%;top:50%;">
+        <form class="in" data-bind="submit: setupUser">
+            User<br>
+            <input id="userId" data-bind="value: userId" style="width:60%" />
+            <button class="green" type="submit" style="background-color:green;">Be</button>
+        </form>
+        <form class="in" data-bind="submit: peerConnect">
+            Peer<br>
+            <input id="peerId" data-bind="value: peerId" style="width:60%" />
+            <button class="green" type="submit" style="background-color:green;">Call</button>
+        </form>
+        <!--<video id="myvid" width="100%" src="test.webm" controls></video>
+        -->
+        <form class="in" data-bind="submit: videoStream">
+            Send Video<br>
+            <input type="file" title="WebM<800KB" style="width:96%" />
+            
+        </form>
+        Received Video<br>
+        <video id="yovid" width="100%" controls></video>
+        <form class="in" data-bind="submit: p2preset">
+            <button class="green" type="submit" style="background-color:green;">Drop</button>
+        </form>
+        
+        <script>events.dragAround('stream'); </script>
+    </div>
+    
+    <script src="./src/js/p2p/p2p.js"></script>
+    <script src="./src/js/p2p/main.js"></script>
     
 
     

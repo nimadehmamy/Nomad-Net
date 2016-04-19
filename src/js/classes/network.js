@@ -27,7 +27,8 @@ var network = {
         this.text = two.makeText(label,0,0,{
                 size: Math.max(r / label.length * 3, 10),
                 stroke: '#555555', //misc.parseColor(.5*(0xffffff - this.style.fill)),
-                fill: 'white'//'#444444' //misc.parseColor(0xffffff - this.style.fill)
+                fill: 'white',//'#444444' //misc.parseColor(0xffffff - this.style.fill)
+                'box-shadow': '0 0 10px 0 rgb(115, 48, 3)'
         })
         //this.text.noStroke();
         this.text.stroke = misc.parseColor( this.style.fill );

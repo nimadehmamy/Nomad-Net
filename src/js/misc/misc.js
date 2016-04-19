@@ -69,7 +69,7 @@ var misc ={
         console.log('here');
         for (var i in node.info){ // style="background-color:green"
             if (node.info[i].form){
-                s += s += '<tr><td>'+i+':</td><td><button type="submit" style="background-color:blue;">'+'Open'+'</button></td></tr>';
+                s += '<tr><td>'+i+':</td><td><button type="submit" style="background-color:blue;">'+'Open'+'</button></td></tr>';
             }
             else{
                 s += '<tr><td>' + i + ':</td><td><input id="i:' + i +
@@ -89,5 +89,17 @@ var misc ={
         return s;
     },
     
-    infoNode: ''
+    infoNode: '',
+    
+    physics: new function(){
+        this.force = function(v,weights){
+            `Takes a distance vector and assigns a force vector`
+            q = weights || [10,10];
+            var mag = 1.0*q[0]*q[1]/(0.1+v.length());
+            //console.log(mag,v.length());
+            var f = v;
+            return f.multiplyScalar(mag/v.length());
+        }
+    }
+    
 }
