@@ -41,7 +41,7 @@ var misc ={
     makeNode: function(where,label, x,y,r,sides,style){
         
         console.log(label);
-        new network.node(label, x,y,r,sides, style)
+        new network.node(where, label, x,y,r,sides, style)
         var node = document.createElement("LI");
         var nodeA = document.createElement("A");
         //nodeA.href = '#';
@@ -55,7 +55,7 @@ var misc ={
         links.innerHTML = 0;
         nodeA.appendChild(links);
         document.getElementById(where).appendChild(node);     // Append <li> to <ul>
-        document.getElementById("nodeLabel").value = '';
+        //document.getElementById("nodeLabel").value = '';
         
     },
     
@@ -95,11 +95,19 @@ var misc ={
         this.force = function(v,weights){
             `Takes a distance vector and assigns a force vector`
             q = weights || [10,10];
-            var mag = 1.0*q[0]*q[1]/(0.1+v.length());
+            var mag = 1.0*q[0]*q[1]/(50.1+v.lengthSquared());
             //console.log(mag,v.length());
             var f = v;
             return f.multiplyScalar(mag/v.length());
         }
+        this.linkPull = function(v,k){
+            `Links as springs`
+            q = k || 1 ;
+            var mag = -q * v.length();
+            var f = v;
+            return f.multiplyScalar(mag/v.length());
+        }
+        
     }
     
 }

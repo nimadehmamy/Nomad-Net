@@ -6,16 +6,20 @@ var network = {
     links: {},
     
     /* Node class: */
-    node: function(label, x,y,r,sides,styles){
+    node: function(type, label, x,y,r,sides,styles){
         network.nodes[label] = this;
+        this.type = type;
+        var n = sides || controls.nodes[type].sides;
+        r = r|| controls.nodes[type].radius;
         
-        var n = sides || 0;
+        this.style = styles || controls.nodes[this.type].style;
+        console.log('node: ',this.style);
         this.id = label;
-        if (!styles){
-            var col = Math.random() * 0xffffff;
-            this.style = {opacity: 0.5,fill: col,stroke: col,linewidth: r / 50};
-        }
-        else {this.style = {fill: styles.fill || (Math.random() * 0xffffff)}}
+        // if (!styles){
+        //     var col = Math.random() * 0xffffff;
+        //     this.style = {opacity: 0.5,fill: col,stroke: col,linewidth: r / 50};
+        // }
+        // else {this.style = {fill: styles.fill || (Math.random() * 0xffffff)}}
         this.size = r;
         if (n===0){
             this.node =  two.makeCircle(0, 0, r);
@@ -25,10 +29,10 @@ var network = {
         this.node.fill = misc.parseColor( this.style.fill );
         this.node.noStroke();
         this.text = two.makeText(label,0,0,{
-                size: Math.max(r / label.length * 3, 10),
+                size: Math.max(r / label.length * 2, 10),
                 stroke: '#555555', //misc.parseColor(.5*(0xffffff - this.style.fill)),
                 fill: 'white',//'#444444' //misc.parseColor(0xffffff - this.style.fill)
-                'box-shadow': '0 0 10px 0 rgb(115, 48, 3)'
+                'box-shadow': '0 0 10px 0 rgb(115*0, 48, 3)'
         })
         //this.text.noStroke();
         this.text.stroke = misc.parseColor( this.style.fill );

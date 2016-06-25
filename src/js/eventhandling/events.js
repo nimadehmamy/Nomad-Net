@@ -159,20 +159,64 @@ events = {
         console.log('binding new event for', obj.group.id, flags.hasEvents[obj.group.id]);
         // also keep track of playing event in
         flags.playing.push(obj.group.id);
-        two.bind('update', function(f){smoothPop(obj, s);}).play();
+        // NOW062516    two.bind('update', function(f){smoothPop(obj, s);}).play();
     },
     
     wheel: function(e){
-        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-        console.log(delta,e.clientX,e.wheelDelta );
+        var delta = Math.max(-3, Math.min(3, (e.wheelDelta || -e.detail)));
+        console.log(delta,e.clientX,e.clientY,e.wheelDelta );
         var ds = 0.01*delta;
         two.scene.scale *= 1+ ds;
-        two.scene.translation.add(two.scene.translation, new Two.Vector(-ds * e.clientX, -ds * e.clientY));
+        two.scene.translation.add(two.scene.translation, new Two.Vector(-ds * (1*e.clientX -0*window.innerWidth/2), -ds * (1*e.clientY-0*window.innerHeight/2)));
         two.update();
         
-    }
+    },
+    
+   onKeyDown : function( event ) {
+
+		if ( scope.enabled === false || scope.noKeys === true || scope.noPan === true ) return;
+		
+		switch ( event.keyCode ) {
+
+			case scope.keys.UP:
+				scope.pan( 0, scope.keyPanSpeed );
+				//scope.update();
+				break;
+
+			case scope.keys.BOTTOM:
+				scope.pan( 0, - scope.keyPanSpeed );
+				//scope.update();
+				break;
+
+			case scope.keys.LEFT:
+				scope.pan( scope.keyPanSpeed, 0 );
+				//scope.update();
+				break;
+
+			case scope.keys.RIGHT:
+				scope.pan( - scope.keyPanSpeed, 0 );
+				//scope.update();
+				break;
+
+		}
+
+	}
 };
+
+scope = new function(){
+    this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+    this.keyPanSpeed = 7;
+    this.pan = function(x,y){
+        two.scene.translation.add(two.scene.translation, new Two.Vector(-x,-y));
+        two.update();
+    }
+    this.update = function(){
+        
+    }
+}
 
 document.addEventListener('mousedown', events.getMouse,false);
 document.addEventListener('mousewheel', events.wheel, false );
 document.addEventListener('touchstart', events.getTouch,false);
+
+window.addEventListener('keydown', events.onKeyDown,false);
