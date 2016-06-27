@@ -1,10 +1,9 @@
 {
     "nodes":
     {
-        "x":{"type":"people"},
-        "y":{"type":"people"},
-        "z":{"type":"projects"}
+        "people":{"x":[500,200]},
+        "tasks":{"y":[500,300]},
+        "projects":{"z":[500,100]}
     },
     "links":"x,y;x,z"
-    
 }

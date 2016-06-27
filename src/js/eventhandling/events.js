@@ -164,10 +164,13 @@ events = {
     
     wheel: function(e){
         var delta = Math.max(-3, Math.min(3, (e.wheelDelta || -e.detail)));
-        console.log(delta,e.clientX,e.clientY,e.wheelDelta );
+        console.log(e.clientX,e.clientY,e.wheelDelta,two.scene.translation );
         var ds = 0.01*delta;
         two.scene.scale *= 1+ ds;
-        two.scene.translation.add(two.scene.translation, new Two.Vector(-ds * (1*e.clientX -0*window.innerWidth/2), -ds * (1*e.clientY-0*window.innerHeight/2)));
+        // two.scene.translation.add(two.scene.translation, new Two.Vector(-ds * (1*e.clientX -0*window.innerWidth/2), -ds * (1*e.clientY-1*window.innerHeight/2)));
+        //
+        two.scene.translation.add(two.scene.translation, new Two.Vector(-ds * (1*e.clientX), -ds * (1*e.clientY)));
+        
         two.update();
         
     },
@@ -189,12 +192,12 @@ events = {
 				break;
 
 			case scope.keys.LEFT:
-				scope.pan( scope.keyPanSpeed, 0 );
+				scope.pan( - scope.keyPanSpeed, 0 );
 				//scope.update();
 				break;
 
 			case scope.keys.RIGHT:
-				scope.pan( - scope.keyPanSpeed, 0 );
+				scope.pan( scope.keyPanSpeed, 0 );
 				//scope.update();
 				break;
 

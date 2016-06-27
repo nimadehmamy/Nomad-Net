@@ -23,6 +23,45 @@
             from {height: 1%;}
             to {height: 96%;}
         }
+        .in input[type="file"] {
+            /*font-size: 6px;*/
+            position: fixed;
+            width:10%;
+            top: -1000px;
+            left: -1000px;
+        }
+        .in2 button{
+            background-color: #fdae61; /*red;*/
+            border: none;
+            border-radius:3px;
+            color: white;
+            padding: 7px 5%;
+            width:100%;
+            margin: auto;
+        }
+        .cen{
+            background: none;
+            margin: auto;
+            width:50%;
+            padding: 0;
+        }
+      #choose{
+          width:90%;
+          background-color: #a6d96a; /* Green */
+          border: none;
+          border-radius: 3px;
+          box-shadow: 0px 1px 1px 0px green;
+          color: green;/*white;*/
+          padding: 5px 5%;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          /*font-size: 16px;*/
+      }
+      
+      /* theme colors:
+      ['#d7191c','#fdae61','#a6d96a','#1a9641']
+      */
     </style>
     
 </head>
@@ -43,30 +82,40 @@
         <form data-bind="submit: changeInfo">
             <table class="in infos" id="info"></table>
         </form>
-            <div class="g-signin2" data-onsuccess="onSignIn" style="display:inline-block;"></div>
-            <script>
-                function onSignIn(googleUser) {
-                  var profile = googleUser.getBasicProfile();
-                  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-                  console.log('Name: ' + profile.getName());
-                  console.log('Image URL: ' + profile.getImageUrl());
-                  console.log('Email: ' + profile.getEmail());
-                }
-            </script>
-            <a href="#" onclick="signOut();">Sign out</a>
-            <script>
-              function signOut() {
-                var auth2 = gapi.auth2.getAuthInstance();
-                auth2.signOut().then(function () {
-                  console.log('User signed out.');
-                });
-              }
-            </script>
+        <!--
+        <div class="g-signin2" data-onsuccess="onSignIn" style="display:inline-block;"></div>
+        <script>
+            function onSignIn(googleUser) {
+              var profile = googleUser.getBasicProfile();
+              console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+              console.log('Name: ' + profile.getName());
+              console.log('Image URL: ' + profile.getImageUrl());
+              console.log('Email: ' + profile.getEmail());
+            }
+        </script>
+        <a href="#" onclick="signOut();">Sign out</a>
+        <script>
+          function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+              console.log('User signed out.');
+            });
+          }
+        </script>
+        -->
         
-        
-        <form class="in" data-bind="submit: fizzix">
-            <button class="green" type="submit" style="background-color:green;">fizzix</button>
-        </form>
+        <div class = "cen">
+            <form class="in2" data-bind="submit: fizzix">
+                <button class="green" type="submit" >fizzix</button>
+            </form>
+            <form class ="in" >
+                <!--<input data-bind="value: photoUrl" />-->
+                <label>
+                <input data-bind="event: {change: $root.fileUpload}" type="file" class="fileChooser"/>
+                <div id="choose">Upload Project</div>
+                </label>
+            </form>
+        </div>
     </div>
     
     <!--
@@ -117,6 +166,8 @@
         <script>events.dragAround('stream'); </script>
     </div>
     -->
+    
+    
     
     <script src="./src/js/data-handling/loader.js"></script>
     <script src="./src/js/visualization/menus.js"></script>

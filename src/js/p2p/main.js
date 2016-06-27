@@ -4,6 +4,7 @@ function nodeProps(type, sides, style){
     this.sides = sides || 0;
     this.radius = 20;
     this.scale = 1;
+    this.scale0 = 1;
     this.style = style || {
         fill: 0xff0000,
         stroke: 0xffffff,
@@ -15,6 +16,7 @@ function linkProps(type, directed){
     this.type = 'generic';
     this.directed = directed || false;
     this.scale = 1;
+    this.scale0 = 1;
     this.style = {
         fill: 0xf00,
         stroke: 0xfff,
@@ -22,11 +24,10 @@ function linkProps(type, directed){
     };
 }
 
-var TYPES ={nodes:['people', 'projects', 'tasks']
- };
+var TYPES ={nodes:['people', 'projects', 'tasks']};
 
 var controls = new function(){
-    this.scale = 10;
+    this.scale = 1;
     this.nodes = {
         people: new nodeProps('people' ,0, {fill: '#4531dc'}),
         projects: new nodeProps('projects' ,5, {fill: '#ff5533'}),
@@ -43,13 +44,17 @@ function updateNet(){
     var nd =  network.nodes;
     for (var i in nd){
         var con = controls.nodes[nd[i].type];
-        nd[i].group.scale = con.scale;
+        nd[i].group.scale *= con.scale/con.scale0;
+        console.log(i,nd[i]);
         for (var v in con.style){
             nd[i].node[v] = con.style[v];
         }
     }
             //this.node.fill = misc.parseColor( this.style.fill );
-        
+    for (var t in TYPES.nodes){
+        var con = controls.nodes[TYPES.nodes[t]];
+        con.scale0 = con.scale;
+    }
     two.update();
 }
 
@@ -108,21 +113,29 @@ var ViewModel = function(label) {
         });
     }
     
-    this.linksLabel = ko.observable('Alice, Bob');
-    self.makeLinks = function(){network.makeLinks(self.linksLabel());
-    };
-    this.tasksLabel = ko.observable('Solve');
-    self.makeTasks = function(){};
-    
-    this.projectsLabel = ko.observable('Nomad Net');
+    this.projectsLabel = ko.observable('Nomads');
     self.makeProjects = function(){
         var ls = misc.splitClean(self.projectsLabel());
         var type = "projects";
         ls.forEach(function(a){
-            misc.makeNode(type, a, 500, 100 //, {fill: 0xff5533}
-            );
+            misc.makeNode(type, a, 500, 100);
         });
     };
+    
+    
+    this.tasksLabel = ko.observable('Solve');
+    self.makeTasks = function(){
+        var ls = misc.splitClean(self.tasksLabel());
+        var type = "tasks";
+        ls.forEach(function(a) {
+            misc.makeNode(type, a, 500, 500 );
+        });
+    };
+    
+    this.linksLabel = ko.observable('Alice, Bob');
+    self.makeLinks = function(){network.makeLinks(self.linksLabel());
+    };
+    
     
     // self.showInfo = function(){
     //     var node = {info:{
@@ -148,6 +161,57 @@ var ViewModel = function(label) {
     self.makeNote = function(){
         //
     };
+    
+    
+    //var self = this;
+    this.photoUrl = ko.observable('here!!');
+    this.fileUpload = function(data, e)
+    {
+        var file    = e.target.files[0];
+        var reader  = new FileReader();
+
+        reader.onloadend = function (onloadend_e)
+        {
+            var result = reader.result; // Here is your base 64 encoded file. Do with it what you want.
+            //console.log(reader.readAsText());
+            self.photoUrl(result);
+            x = JSON.parse(result);
+            for (var type in x.nodes){
+                var y = x.nodes[type];
+                for (var label in y){
+                    misc.makeNode(type, label, y[label][0], y[label][1]);
+                }
+            }
+            network.makeLinks(x.links);
+        };
+
+        if(file)
+        {
+            //reader.readAsDataURL(file);
+            reader.readAsText(file);
+        }
+        ` The Structure of the json file should be
+        {
+            "nodes": {
+                "type": {
+                    "label": [x, y]
+                }
+            },
+            "links":{
+                "label1,label2;..."
+            }
+        }
+        `;
+        
+    };
+    
+    
+    
+    
+    
+    
+    
+    
     
     /// Peer to Peer parts
     
@@ -175,7 +239,7 @@ var ViewModel = function(label) {
     
     this.repel = function(frame){
         var done=true;
-        console.log('fizzzix');
+        //console.log('fizzzix');
         for (var i in network.nodes){
             for (var j in network.nodes){
                 if (i!=j){
@@ -192,8 +256,8 @@ var ViewModel = function(label) {
                     var link1 = i + ',' + j;
                     var link2 = j + ',' + i;
                     var k = 1;
-                    if (dist.length()>controls.nodeSize/10){
-                    
+                    //console.log(dist.length(), controls.scale/20);
+                    if (dist.length()>controls.scale/20){
                         if (flags.links[i].includes(link1) || flags.links[j].includes(link2)) {
                             //console.log(link1, 'exists');
                             try {
@@ -202,7 +266,9 @@ var ViewModel = function(label) {
                             catch (err) {
                                 k = network.links[link2].link.linewidth / (controls.nodeSize / 5);
                             }
-                            nd2.sub(nd2, misc.physics.linkPull(dist, 3 * k));
+                            var fp = misc.physics.linkPull(dist, 20 * k);
+                            //console.log('pull:',fp);
+                            nd2.sub(nd2, fp);
                         }
                     }
                     var l = flags.links[j];

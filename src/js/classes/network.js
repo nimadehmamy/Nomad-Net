@@ -86,7 +86,7 @@ var network = {
     /* Link class: */
     link: function(label1,label2, styles){
         if (!styles) {
-            var col = Math.random() * 0xffffff;
+            var col = 0*Math.random() * 0xffffff;
             this.style = {
                 opacity: 0.5,
                 fill: col,
