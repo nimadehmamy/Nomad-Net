@@ -7,6 +7,7 @@ var network = {
     
     /* Node class: */
     node: function(type, label, x,y,r,sides,styles){
+        var self = this;
         network.nodes[label] = this;
         this.type = type;
         var n = sides || controls.nodes[type].sides;
@@ -51,6 +52,11 @@ var network = {
             "Nick Name": label,
             "Name": '',
             href: '#'
+        }
+        
+        // destructor
+        function remove(){
+            
         }
         
         this.doc =`

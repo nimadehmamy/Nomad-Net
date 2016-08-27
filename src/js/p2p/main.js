@@ -1,63 +1,7 @@
 
-function nodeProps(type, sides, style){
-    this.type = type || 'generic';
-    this.sides = sides || 0;
-    this.radius = 20;
-    this.scale = 1;
-    this.scale0 = 1;
-    this.style = style || {
-        fill: 0xff0000,
-        stroke: 0xffffff,
-        linewidth: 2,
-    };
-}
-
-function linkProps(type, directed){
-    this.type = 'generic';
-    this.directed = directed || false;
-    this.scale = 1;
-    this.scale0 = 1;
-    this.style = {
-        fill: 0xf00,
-        stroke: 0xfff,
-        linewidth: 2,
-    };
-}
-
-var TYPES ={nodes:['people', 'projects', 'tasks']};
-
-var controls = new function(){
-    this.scale = 1;
-    this.nodes = {
-        people: new nodeProps('people' ,0, {fill: '#4531dc'}),
-        projects: new nodeProps('projects' ,5, {fill: '#ff5533'}),
-        tasks : new nodeProps('tasks', 4, {fill: '#b12176'}),
-    };
-    this.links = new linkProps();
-    
-}
 
 // make gui
-makeGUI();
-
-function updateNet(){
-    var nd =  network.nodes;
-    for (var i in nd){
-        var con = controls.nodes[nd[i].type];
-        nd[i].group.scale *= con.scale/con.scale0;
-        console.log(i,nd[i]);
-        for (var v in con.style){
-            nd[i].node[v] = con.style[v];
-        }
-    }
-            //this.node.fill = misc.parseColor( this.style.fill );
-    for (var t in TYPES.nodes){
-        var con = controls.nodes[TYPES.nodes[t]];
-        con.scale0 = con.scale;
-    }
-    two.update();
-}
-
+menu.makeGUI();
 
 def = { //defaults
     r: 20
@@ -304,10 +248,10 @@ var ViewModel = function(label) {
 //         };
 
 
-makeNodeMenu('people');
-makeNodeMenu('projects');
-makeNodeMenu('tasks');
-makeNodeMenu('links');
+menu.makeNodeMenu('people');
+menu.makeNodeMenu('projects');
+menu.makeNodeMenu('tasks');
+menu.makeNodeMenu('links');
 ko.applyBindings(new ViewModel()); // This makes Knockout get to work
 
 events.dragAround('toolbox');

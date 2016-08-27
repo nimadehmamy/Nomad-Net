@@ -1,0 +1,37 @@
+{
+    "nodes":
+    {
+        "people":{
+            "Fakhteh":[430,200],
+            "Rasoul":[450,200],
+            
+            "Fariba":[480,200],
+            "Navid":[500,200],
+            
+            "Nima":[540,200],
+            "Yasi":[560,200],
+            "Dina":[580,200]
+        },
+        "tasks":{
+            "1":[420,400],
+            "2":[440,400],
+            "3":[460,400],
+            "4":[480,400],
+            "5":[500,400],
+            "6":[520,400],
+            "7":[540,400],
+            "8":[560,400],
+            "9":[580,400],
+            "10":[600,400]
+        },
+        "projects":{
+            "Book":[500,80],
+            "Transl":[500,100],
+            "Edit":[500,100],
+            "Web":[500,100],
+            "Vis":[500,100]
+            
+        }
+    },
+    "links":"Book,Transl;Book,Edit;Book,Web;Book,Vis;    Fakhteh,Transl;Fakhteh,5;Fakhteh,6; Fakhteh,10; Fariba,5;Fariba,6;Fariba,10;Fariba,Fakhteh;    Yasi,2; Yasi,3; Yasi,4;   Dina,2; Dina,3;Dina,4; Yasi,Dina; Yasi,Transl;   Rasoul,8;Rasoul,1;Rasoul,Edit;     Nima,Transl;Nima,7; Nima,8;Nima,9;Nima,Rasoul;Nima,Navid;  Nima,Web;Nima,Vis; Navid,7; Navid,8;Navid,9; Navid,Web"
+}
