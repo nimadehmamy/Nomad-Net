@@ -114,6 +114,10 @@ var menu = new function(){
                 but = 'Commence';
                 col = 'red';
                 break;
+            case 'subProjects':
+                but = 'Commence';
+                col = 'red';
+                break;
             case 'tasks':
                 but = 'Oblige';
                 //col = 'blue';

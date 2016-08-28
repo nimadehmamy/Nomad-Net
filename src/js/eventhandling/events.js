@@ -218,8 +218,11 @@ scope = new function(){
     }
 }
 
-document.addEventListener('mousedown', events.getMouse,false);
-document.addEventListener('mousewheel', events.wheel, false );
-document.addEventListener('touchstart', events.getTouch,false);
 
-window.addEventListener('keydown', events.onKeyDown,false);
+// document.addEventListener('mousedown', events.getMouse,false);
+// document.addEventListener('mousewheel', events.wheel, false );
+// document.addEventListener('touchstart', events.getTouch,false);
+
+// window.addEventListener('keydown', events.onKeyDown,false);
+
+

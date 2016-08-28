@@ -17,20 +17,6 @@
     <meta name="google-signin-client_id" content="66617827369-67tfnfu6qitqhg717vteu051up3tqrmq.apps.googleusercontent.com">
 
     <style>
-        
-        html, body {
-          font: 10pt arial;
-          padding: 0;
-          margin: 0;
-          width: 100%;
-          height: 100%;
-        }
-    
-        #network {
-          width: 100%;
-          height: 100%;
-        }
-      
         .notes textarea {
             animation-name: collapse;
             animation-duration: 1s;
@@ -81,13 +67,12 @@
     </style>
     
 </head>
-<body onload="draw();">
-    <div id="network"></div>
+<body>
+    <div id="main"></div>
     <script src="src/js/vendor/dat.gui.min.js"></script>
-    <!--<script src="src/js/vendor/two.min.js"></script>
-    -->
+    <script src="src/js/vendor/two.min.js"></script>
     <script src="src/js/visualization/scene-setup.js"></script>
-    <script src="src/js/classes/network-v2.js"></script>
+    <script src="src/js/classes/network.js"></script>
     
     
     <div id="toolbox" class="float">
@@ -122,11 +107,9 @@
         -->
         
         <div class = "cen">
-            <!--
             <form class="in2" data-bind="submit: fizzix">
                 <button class="green" type="submit" >fizzix</button>
             </form>
-            -->
             <form class ="in" >
                 <!--<input data-bind="value: photoUrl" />-->
                 <label>
@@ -137,14 +120,62 @@
         </div>
     </div>
     
-   
+    <!--
+    <div id="notes" class="float" data-bind="submit: makeNote">
+        <form class="in" >
+            Notes:
+            <div class="note">
+                <textarea id="note-text" data-bind="value: noteText"></textarea>
+            </div>
+            <button type="submit" style="background-color:green;">Note</button>
+            <script>events.dragAround('notes'); </script>
+        </form>
+    </div>
+    <div id="stream" class="float" style="left:77%;top:50%;">
+        <form class="in" data-bind="submit: setupUser">
+            User<br>
+            <input id="userId" data-bind="value: userId" style="width:60%" />
+            <button class="green" type="submit" style="background-color:green;">Be</button>
+        </form>
+        <form class="in" data-bind="submit: peerConnect">
+            Peer<br>
+            <input id="peerId" data-bind="value: peerId" style="width:60%" />
+            <button class="green" type="submit" style="background-color:green;">Call</button>
+        </form>
+        <form class="in" data-bind="submit: videoStream">
+            Send Video<br>
+            <input type="file" title="WebM<800KB" style="width:96%" />
+            
+        </form>
+        Received Video<br>
+        <video id="yovid" width="100%" controls></video>
+        <form class="in" data-bind="submit: p2preset">
+            <button class="green" type="submit" style="background-color:green;">Drop</button>
+        </form>
+        <script>
+            var streamer = new Streamer();
+            document.querySelector('input[type=file]').onchange = function () {
+                streamer.stream(this.files[0]);
+            };
+            streamer.push = function (chunk) {
+                        p2p.conn.send({
+                            type: 'stream',
+                            stream: chunk
+                        });
+                    };
+        </script>
+        
+        <script>events.dragAround('stream'); </script>
+    </div>
+    -->
     
     
     
     <script src="./src/js/data-handling/loader.js"></script>
     <script src="./src/js/visualization/menus.js"></script>
     
-    <script src="./src/js/main-v2.js"></script>
+    <script src="./src/js/p2p/p2p.js"></script>
+    <script src="./src/js/p2p/main.js"></script>
     
 
     

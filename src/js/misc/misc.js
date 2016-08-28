@@ -38,26 +38,7 @@ var misc ={
         return color;
       }
     },
-    makeNode: function(where,label, x,y,r,sides,style){
-        
-        console.log(label);
-        new network.node(where, label, x,y,r,sides, style)
-        var node = document.createElement("LI");
-        var nodeA = document.createElement("A");
-        //nodeA.href = '#';
-        node.setAttribute("onclick", "misc.showInfo($(this)[0].childNodes[0].id.slice(2))");//("data-bind", "click: showInfo");
-        var textnode = document.createTextNode( label);
-        nodeA.appendChild(textnode);
-        nodeA.id = "n:"+label;
-        node.appendChild(nodeA);    // Append the text to <li>
-        var links = document.createElement("SPAN");
-        links.id = "ls:"+label;
-        links.innerHTML = 0;
-        nodeA.appendChild(links);
-        document.getElementById(where).appendChild(node);     // Append <li> to <ul>
-        //document.getElementById("nodeLabel").value = '';
-        
-    },
+    
     
     showInfo: function(el){
         console.log('info: ', el);
