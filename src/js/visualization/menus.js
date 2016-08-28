@@ -29,7 +29,7 @@ function linkProps(type, directed){
     };
 }
 
-var TYPES ={nodes:['people', 'projects', 'tasks']};
+var TYPES ={nodes:['people', 'projects','subprojects', 'tasks']};
 
 var controls = new function(){
     this.scale = 1;
@@ -39,9 +39,26 @@ var controls = new function(){
         tasks : new nodeProps('tasks', 4, {fill: '#b12176'}),
     };
     this.links = new linkProps();
-    
+    this.layout = {Hierarchical: false};
 }();
 
+var hierOpts = {
+    layout: {
+        randomSeed: undefined,
+        improvedLayout: false,
+        hierarchical: {
+            enabled: false,
+            levelSeparation: 150,
+            nodeSpacing: 100,
+            treeSpacing: 200,
+            blockShifting: true,
+            edgeMinimization: true,
+            parentCentralization: true,
+            direction: 'UD', // UD, DU, LR, RL
+            sortMethod: 'directed' // hubsize, directed
+        }
+    }
+};
 
 var gui ;
 
@@ -51,6 +68,7 @@ var menu = new function(){
 
         var guiNet = gui.addFolder('Network Properties');
         var guiNode = guiNet.addFolder("Nodes");
+        
         var active = {
             type: '',
             element: ''
@@ -67,11 +85,21 @@ var menu = new function(){
             //active.type = nd.type;
             console.log('menu: ', nd.type);
         }
+        
+        var guiHier = guiNet.add(controls.layout, "Hierarchical", false).onChange(menu.layNet);
+        
+        
 
 
-    }
+    };
 
-
+    this.layNet = function(){
+        hierOpts.layout.hierarchical.enabled = controls.layout.Hierarchical;
+        
+        
+        network.net.setOptions(hierOpts);
+    };
+    
     this.updateNet = function() {
         var nd = network.nodes;
         for (var i in nd) {

@@ -4,7 +4,7 @@
 menu.makeGUI();
 
 def = { //defaults
-    r: 20
+    r: 5
 };
 
 var flags = {
@@ -18,7 +18,7 @@ var ViewModel = function(label) {
     this.peopleLabel = ko.observable('Alice');
     var self = this;
     //self.makeNodes
-    self.makePeople = function(){
+    this.makePeople = function(){
         var ls = misc.splitClean(self.peopleLabel());
         var type = "people";
         ls.forEach(function(name){
@@ -32,7 +32,7 @@ var ViewModel = function(label) {
     };
     
     this.projectsLabel = ko.observable('Nomads');
-    self.makeProjects = function(){
+    this.makeProjects = function(){
         var ls = misc.splitClean(self.projectsLabel());
         var type = "projects";
         ls.forEach(function(a){
@@ -41,7 +41,7 @@ var ViewModel = function(label) {
     };
     
     this.subProjectsLabel = ko.observable('Nomadions');
-    self.makeSubProjects = function(){
+    this.makeSubProjects = function(){
         var ls = misc.splitClean(self.projectsLabel());
         var type = "subProjects";
         ls.forEach(function(a){
@@ -51,7 +51,7 @@ var ViewModel = function(label) {
     
     
     this.tasksLabel = ko.observable('Solve');
-    self.makeTasks = function(){
+    this.makeTasks = function(){
         var ls = misc.splitClean(self.tasksLabel());
         var type = "tasks";
         ls.forEach(function(a) {
@@ -60,22 +60,9 @@ var ViewModel = function(label) {
     };
     
     this.linksLabel = ko.observable('Alice, Bob');
-    self.makeLinks = function(){network.makeLinks(self.linksLabel());
+    this.makeLinks = function(){network.makeLinks(self.linksLabel());
     };
     
-    
-    // self.showInfo = function(){
-    //     var node = {info:{
-    //          hi: 'there',
-    //          how: 'are you'
-    //      }
-    //      };
-    //     str = "";
-    //     for (i in node.info){
-    //         s += i+": "+node.info[i] +"<br>";
-    //     }
-    //     $('#info').innerHTML = s;
-    // }
     
     this.changeInfo = function(){
         var el = document.activeElement;
@@ -122,7 +109,9 @@ var ViewModel = function(label) {
         {
             "nodes": {
                 "type": {
-                    "label": [x, y]
+                    "label": {
+                        options
+                    }
                 }
             },
             "links":{
@@ -196,10 +185,11 @@ var getClustOpts = function(label){
 };
 
 // !! Make more general options for clustering
-function makeClusters(){
+function makeClusters(type){
+    type = type || "projects";
     for (var p in network.nodes){
         var nd = network.nodes[p];
-        if (nd.type == "projects"){
+        if (nd.type == type){
             network.net.clustering.cluster(getClustOpts(nd.id));
         }
     }
@@ -223,7 +213,10 @@ function draw(){
         },
         edges: {
             color: GRAY,
-            smooth: false
+            smooth: false,
+            arrows: {
+                from: true
+            }
         },
         physics: {
             barnesHut: {
@@ -264,6 +257,9 @@ function draw(){
             if (network.net.isCluster(params.nodes[0]) == true) {
                 network.net.openCluster(params.nodes[0])
             }
+            else {
+                network.net.clustering.cluster(getClustOpts(network.nodes[params.nodes[0]].id));
+            }
         }
     });
     
@@ -279,6 +275,13 @@ function draw(){
         }
     });
     
+    network.net.on("click", function (params) {
+        try{
+            misc.showInfo(params.nodes[0]);
+        }catch(err){
+            console.log("!! Has no info!!");
+        }
+    });
     
     
 }
