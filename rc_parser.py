@@ -7,16 +7,16 @@ dtset = {
         "projects": {
         }
     },
-    "links":"node1,node2;node1,t1;node2,t2"    
+    "links":{}
 }
 df = pd.read_table('rocket_chat_msg.tsv')
 users = df['User'].unique()
 for u in users:
-    dtset['nodes']['people'][u] = {}
+    dtset['nodes']['people'][u] = {'size':0}
 rooms = df['RoomName'].unique()
 for r in rooms:
     if 'P:' not in r:
-        dtset['nodes']['projects'][r] = {}
+        dtset['nodes']['projects'][r] = {'size':0}
 links = {}
 for i in range(len(df)):
     u = df['User'][i]
@@ -27,10 +27,12 @@ for i in range(len(df)):
             r = u2
         else:
             r = u1
+        dtset['nodes']['people'][r]['size'] += 1
+    else:
+        dtset['nodes']['projects'][r]['size'] += 1
     l = "{},{}".format(r,u)
-    if l not in links:
-        links[l] = 0
-    links[l] += 1
-r = ";".join(links.keys())
-dtset['links'] = r
+    if l not in dtset['links']:
+        dtset['links'][l] = {'weight':0}
+    dtset['links'][l]['weight'] += 1
+    dtset['nodes']['people'][u]['size'] += 1
 json.dump(dtset,open("leo.json",'w'))
