@@ -128,11 +128,12 @@ var ViewModel = function(label) {
 };
 
 menu.makeNodeMenu('people');
-menu.makeNodeMenu('projects');
-menu.makeNodeMenu('subProjects');
-
-menu.makeNodeMenu('tasks');
 menu.makeNodeMenu('links');
+
+// menu.makeNodeMenu('projects');
+// menu.makeNodeMenu('subProjects');
+// menu.makeNodeMenu('tasks');
+
 ko.applyBindings(new ViewModel()); // This makes Knockout get to work
 
 events.dragAround('toolbox');
@@ -178,7 +179,7 @@ var getClustOpts = function(label){
         clusterNodeProperties: {
             id: "cl:"+label,
             label: label,
-            value: 30,
+            value: 10+ 20* network.net.getConnectedNodes(label).length,
             group: gr
         }
     };

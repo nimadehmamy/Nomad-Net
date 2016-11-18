@@ -17,7 +17,13 @@ var network = {
         this.type = type;
         this.id = label;
         flags.links[label] = [];
-        var op = {id: label, label: label, group: type}
+        var op = {
+            id: label,
+            label: label,
+            value: 10,
+            group: type,
+            scaling: {max:100},
+        }
         if (opts){
             for (var i in opts){
                     console.log(i,opts[i]);
@@ -45,14 +51,18 @@ var network = {
     link: function(label1,label2, styles){
         
         this.id = label1 + ',' + label2;
-        this.id2 = label2 + ',' + label1;
+        //this.id2 = label2 + ',' + label1;
         
-        if (flags.links[label1].includes(this.id) || flags.links[label1].includes(this.id2)) {
+        if (flags.links[label1].includes(this.id) //|| flags.links[label1].includes(this.id2)
+        ) {
             console.log(this.id, 'exists');
             try{
-                network.data.edges._data[this.id].width += def.r / 5;
+                //network.data.edges._data[this.id].width += def.r / 5;
+                network.net.body.edges[this.id].options.width = Math.log( 2e5+ Math.exp(network.net.body.edges[this.id].options.width ));
+                
             }catch(err){
-                network.data.edges._data[this.id2].width += def.r / 5;
+                //network.data.edges._data[this.id2].width += def.r/5;
+                //network.net.body.edges[this.id2].options.width += 2;
             }
         }
         else {
@@ -65,6 +75,9 @@ var network = {
         
         document.getElementById('ls:'+label1).innerHTML = flags.links[label1].length;
         document.getElementById('ls:'+label2).innerHTML = flags.links[label2].length;
+        
+        network.net.body.nodes[label1].options.value += 5 ;
+        network.net.body.nodes[label2].options.value += 5;
         // network.nodes[label1].group.scale = 1+ Math.log(flags.links[label1].length);
         // network.nodes[label2].group.scale = 1+ Math.log(flags.links[label2].length);
         
@@ -234,7 +247,13 @@ var network = {
         links.id = "ls:"+label;
         links.innerHTML = 0;
         nodeA.appendChild(links);
-        document.getElementById(where).appendChild(node);     // Append <li> to <ul>
+        try{
+            document.getElementById(where).appendChild(node);
+        }catch(TypeError){
+            menu.makeNodeMenu(where);
+            document.getElementById(where).appendChild(node);
+        }
+        // Append <li> to <ul>
         //document.getElementById("nodeLabel").value = '';
         
     },
